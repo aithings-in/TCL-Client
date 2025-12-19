@@ -127,32 +127,7 @@ const RegistrationForm = () => {
               Our team will contact you soon with the trial dates and venue
               details.
             </p>
-            <p className="text-gray-700 mb-6">
-              Please join the whatsapp community for the updates.
-            </p>
-            <a
-              href="https://chat.whatsapp.com/FcZDOq05yAt9Otycsxw46n"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button
-                size="lg"
-                className="bg-green-500 hover:bg-green-600 text-white text-base font-bold w-full md:w-auto px-6 py-3"
-              >
-                <MessageCircle className="mr-2 h-5 w-5" />
-                Whatsapp Community
-              </Button>
-            </a>
-            <div className="mt-6">
-              <Link href="/">
-                <Button
-                  variant="outline"
-                  className="border-gray-300 text-gray-700 hover:bg-brandPink hover:border-brandPink hover:text-white"
-                >
-                  Back to Home
-                </Button>
-              </Link>
-            </div>
+            
           </motion.div>
         </div>
       </div>

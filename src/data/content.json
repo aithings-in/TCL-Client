@@ -1,0 +1,793 @@
+{
+  "homePage": {
+    "hero": {
+      "title": "India's First AI Platform for Cricket Excellence",
+      "subtitle": "Pioneering AI at a massive scale to enhance performance and produce the best cricketers in India.",
+      "primaryButton": {
+        "text": "REGISTER FOR TRIALS",
+        "action": "scrollToRegister"
+      },
+      "secondaryButton": {
+        "text": "Learn About AI Training",
+        "link": "/journey"
+      },
+      "backgroundImage": "https://images.unsplash.com/photo-1678995635432-d9e89c7a8fc5",
+      "backgroundImageAlt": "Futuristic AI data streams overlaid on a cricket pitch"
+    },
+    "whatAreYouLookingFor": {
+      "title": "What Are You Looking For?",
+      "items": [
+        {
+          "id": 1,
+          "icon": "Calendar",
+          "title": "Fixtures & Results",
+          "link": "#"
+        },
+        {
+          "id": 2,
+          "icon": "Table",
+          "title": "Points Table",
+          "link": "#"
+        },
+        {
+          "id": 3,
+          "icon": "BarChart3",
+          "title": "Overall Stats",
+          "link": "#"
+        },
+        {
+          "id": 4,
+          "icon": "Users",
+          "title": "All Teams",
+          "link": "#"
+        }
+      ]
+    },
+    "journeyFlowchart": {
+      "title": "Your Journey to Success",
+      "subtitle": "Follow the path from trials to professional cricket sponsorship",
+      "steps": [
+        {
+          "num": 1,
+          "label": "Trials"
+        },
+        {
+          "num": 2,
+          "label": "State Camp"
+        },
+        {
+          "num": 3,
+          "label": "Super Camp"
+        },
+        {
+          "num": 4,
+          "label": "Super Advance Camp"
+        },
+        {
+          "num": 5,
+          "label": "National Camp"
+        },
+        {
+          "num": 6,
+          "label": "Auctions"
+        },
+        {
+          "num": 7,
+          "label": "National League"
+        },
+        {
+          "num": 8,
+          "label": "International Tour"
+        },
+        {
+          "num": 9,
+          "label": "25 Lakh Sponsorship"
+        }
+      ]
+    },
+    "selectionProcess": {
+      "title": "TCL SELECTION PROCESS",
+      "items": [
+        {
+          "id": 1,
+          "title": "Eligibility Criteria:",
+          "description": "TCL registration process is very simple and straightforward. Are you 12 years or older? If yes, then this marks the beginning of your cricketing journey. For such a significant sports event, a small registration fee is required.",
+          "link": "/register",
+          "linkText": "Read More"
+        },
+        {
+          "id": 2,
+          "title": "Selection Process",
+          "description": "Following TCL Registration, players will have the opportunity to showcase their talents in a cricket trial match. Upon selection, players are enrolled in the Turbo Cricket League (TCL) with an additional nominal fees.",
+          "link": "/register",
+          "linkText": "Read More"
+        },
+        {
+          "id": 3,
+          "title": "Mentors and Experts",
+          "description": "The talent and dedication of the player will lead them to success. There is a team of selectors with expertise in identifying promising talent, who will be the Future Cricket Stars.",
+          "link": "/register",
+          "linkText": "Read More"
+        }
+      ],
+      "cta": {
+        "title": "Turbo Cricket League",
+        "description": "Hurry and secure your spot in TCL | Turbo Cricket League - register now and join the cricket excitement!",
+        "buttonText": "REGISTER NOW",
+        "link": "/register"
+      }
+    },
+    "magicMoments": {
+      "title": "Magic Moments",
+      "seeMoreButton": "See More"
+    },
+    "latestVideos": {
+      "title": "Latest Videos",
+      "viewAllButton": "View All"
+    },
+    "newsSection": {
+      "title": "Turbo NEWS"
+    },
+    "offlineLeague": {
+      "title": "The Ultimate Offline League",
+      "description": "We're recruiting the best talent from across the country for our high-stakes offline cricket league. This is your chance to get scouted, win sponsorships, and compete for incredible prizes. The grand final will be held in a prestigious International stadium!",
+      "prizes": [
+        {
+          "id": 1,
+          "title": "WINNING TEAM",
+          "prize": "₹31 LAKH",
+          "icon": "Award",
+          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+          "imageAlt": "Bowler celebrating wicket"
+        },
+        {
+          "id": 2,
+          "title": "RUNNER-UP TEAM",
+          "prize": "₹21 LAKH",
+          "icon": "Award",
+          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+          "imageAlt": "Batsman celebrating milestone"
+        },
+        {
+          "id": 3,
+          "title": "MAN OF THE SERIES",
+          "prize": "MAHINDRA THAR",
+          "icon": "Award",
+          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+          "imageAlt": "Cricketer with trophy"
+        },
+        {
+          "id": 4,
+          "title": "BEST BATTER",
+          "prize": "ROYAL ENFIELD BULLET",
+          "icon": "Award",
+          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+          "imageAlt": "Batter playing shot"
+        },
+        {
+          "id": 5,
+          "title": "BEST BOWLER",
+          "prize": "ROYAL ENFIELD BULLET",
+          "icon": "Award",
+          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+          "imageAlt": "Bowler in action"
+        }
+      ]
+    },
+    "aiPlatform": {
+      "title": "The Future of Cricket Training",
+      "items": [
+        {
+          "id": 1,
+          "number": 1,
+          "title": "AI PERFORMANCE ANALYSIS",
+          "icon": "BrainCircuit",
+          "description": "Our system monitors every move during matches, providing data-driven insights to elevate your game."
+        },
+        {
+          "id": 2,
+          "number": 2,
+          "title": "PERSONALIZED TRAINING",
+          "icon": "Bot",
+          "description": "Receive training programs tailored to your unique strengths and weaknesses, identified by our AI."
+        },
+        {
+          "id": 3,
+          "number": 3,
+          "title": "NATIONWIDE TRAINING CENTERS",
+          "icon": "Map",
+          "description": "We're building 12 state-of-the-art offline facilities equipped with our AI technology for hands-on training."
+        }
+      ]
+    },
+    "stats": {
+      "items": [
+        {
+          "id": 1,
+          "end": 12,
+          "suffix": "",
+          "title": "AI Facilities Planned"
+        },
+        {
+          "id": 2,
+          "end": 1,
+          "suffix": "st",
+          "title": "AI Platform in India"
+        },
+        {
+          "id": 3,
+          "end": 400,
+          "suffix": "+",
+          "title": "Players to be Scouted"
+        },
+        {
+          "id": 4,
+          "end": 1,
+          "suffix": "",
+          "title": "International Final"
+        }
+      ]
+    },
+    "whyJoinTCL": {
+      "title": "Why Join TCL?",
+      "items": [
+        {
+          "id": 1,
+          "title": "Nationwide Scouting",
+          "description": "Transparent trials across India to find the best talent.",
+          "icon": "Zap"
+        },
+        {
+          "id": 2,
+          "title": "Elite Mentorship",
+          "description": "Train with top coaches & ex-international players.",
+          "icon": "UserCheck"
+        },
+        {
+          "id": 3,
+          "title": "Life-Changing Rewards",
+          "description": "Win massive cash prizes, vehicles, and sponsorships.",
+          "icon": "Award"
+        },
+        {
+          "id": 4,
+          "title": "Fair & Transparent",
+          "description": "100% merit-based selection, powered by AI analytics.",
+          "icon": "ShieldCheck"
+        }
+      ]
+    },
+    "registerSection": {
+      "title": "Register for Trials"
+    },
+    "finalCTA": {
+      "title": "Your Journey to Professional Cricket Begins Here.",
+      "subtitle": "Don't wait for the opportunity. Create it with the power of AI.",
+      "primaryButton": {
+        "text": "Claim Your Spot",
+        "action": "scrollToRegister"
+      },
+      "secondaryButton": {
+        "text": "Explore Player Journey",
+        "link": "/journey"
+      }
+    },
+    "whyChooseUs": {
+      "leagueName": "Young Stars Cricket League",
+      "title": "Why Choose Us?",
+      "description": "Young Stars Cricket League isn't just a cricket tournament; it's a launching pad for aspiring cricketers. If you dream of a future in cricket, YSCLeague provides unparalleled opportunities to showcase your talent and rise through the ranks. With cricket trials, state-level leagues, national auctions, international tours, and a chance to get noticed by top team owners and celebrities, YSCL offers the ultimate cricketing experience. Elevate your cricketing career with YSCL, where dreams take flight, and the journey to cricketing glory begins. Join us and be a part of the cricketing revolution!",
+      "features": [
+        {
+          "id": 1,
+          "icon": "FileText",
+          "title": "Your Path to Cricket Stardom:",
+          "description": "YSCLeague offers a clear pathway for young cricketers to reach their full potential. From state trials to national auctions, we provide the platform for your cricketing journey."
+        },
+        {
+          "id": 2,
+          "icon": "Award",
+          "title": "Mentored by the Best:",
+          "description": "With ICC and BCCI-level umpires and seasoned coaches overseeing trials, you receive top-notch guidance, helping you hone your skills and excel in the game."
+        },
+        {
+          "id": 3,
+          "icon": "TrendingUp",
+          "title": "Exposure and Opportunities:",
+          "description": "YSCLeague opens doors to national and international exposure, drawing the attention of team owners, celebrities, and sponsors. This is your chance to turn your passion for cricket into a promising career."
+        }
+      ]
+    },
+    "gallery": {
+      "title": "Gallery"
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "subtitle": "Trusted by Thousand of Players and Coaches",
+      "rating": {
+        "value": "4.9",
+        "totalRatings": "1,394",
+        "source": "Google Reviews",
+        "seeAllLink": "#"
+      },
+      "testimonials": [
+        {
+          "id": 1,
+          "rating": 5,
+          "text": "YSCLeague has been a game-changer in my cricket career. The platform it provides for young talents is unparalleled. Thanks to YSCL, I'm now a state-level player, living my dream!",
+          "name": "Rahul Sharma",
+          "role": "State-level Cricketer",
+          "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces"
+        },
+        {
+          "id": 2,
+          "rating": 5,
+          "text": "As a parent, I'm incredibly impressed with YSCLeague commitment to the safety and development of young cricketers. My child's growth, both as a player and an individual, has been remarkable.",
+          "name": "Priya Singh",
+          "role": "Parent of YSCL Player",
+          "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces"
+        },
+        {
+          "id": 3,
+          "rating": 5,
+          "text": "Coaching at YSCLeague has been a truly rewarding experience. The talent here is extraordinary, and YSCL's dedication to cricket excellence shines through quality coaching.",
+          "name": "Amit Patel",
+          "role": "YSCL Coach",
+          "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=faces"
+        },
+        {
+          "id": 4,
+          "rating": 5,
+          "text": "The opportunities provided by YSCLeague are unmatched. I've seen incredible growth in my skills and confidence since joining. This is truly a platform for champions.",
+          "name": "Vikram Kumar",
+          "role": "YSCL Player",
+          "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces"
+        },
+        {
+          "id": 5,
+          "rating": 5,
+          "text": "As a coach, I appreciate the professional approach and dedication of YSCLeague. The platform gives young players the exposure they need to succeed at higher levels.",
+          "name": "Rajesh Mehta",
+          "role": "Cricket Coach",
+          "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=faces"
+        }
+      ]
+    }
+  },
+  "aboutPage": {
+    "title": "About The League",
+    "ourStory": {
+      "title": "Our Story",
+      "description": "Turbo Cricket League was born from a simple yet powerful idea: to create a transparent, merit-based platform for India's hidden cricket talent. We saw countless gifted players in gullies and local grounds who lacked the right opportunities. TCL is our answer—a professional ecosystem to discover, nurture, and launch the next generation of cricket superstars.",
+      "image": "https://images.unsplash.com/flagged/photo-1568407371446-a239664fb4f4",
+      "imageAlt": "Group of diverse young cricketers standing together"
+    },
+    "visionMission": [
+      {
+        "id": 1,
+        "icon": "Eye",
+        "title": "Our Vision",
+        "description": "To be India's most trusted and exciting pathway for young cricketers to achieve their professional dreams."
+      },
+      {
+        "id": 2,
+        "icon": "Target",
+        "title": "Our Mission",
+        "description": "To unearth talent from every corner of the country through fair selections, provide elite mentorship, and create a world-class competitive tournament."
+      }
+    ],
+    "coreValues": {
+      "title": "Our Core Values",
+      "items": [
+        {
+          "id": 1,
+          "icon": "ShieldCheck",
+          "title": "Fairness",
+          "description": "A level playing field where only performance matters."
+        },
+        {
+          "id": 2,
+          "icon": "Award",
+          "title": "Transparency",
+          "description": "An open and clear selection process for all."
+        },
+        {
+          "id": 3,
+          "icon": "UserCheck",
+          "title": "Opportunity",
+          "description": "Providing a real chance for every deserving player."
+        },
+        {
+          "id": 4,
+          "icon": "TrendingUp",
+          "title": "Growth",
+          "description": "Nurturing talent into professional athletes."
+        }
+      ]
+    },
+    "journey": {
+      "title": "Our Journey",
+      "timeline": [
+        {
+          "year": "2023",
+          "title": "The Idea",
+          "description": "Conceptualized a nationwide talent hunt to bridge the gap between gully cricket and professional leagues."
+        },
+        {
+          "year": "2024",
+          "title": "Foundation",
+          "description": "Turbo Cricket League was officially formed, and partnerships with top coaches were established."
+        },
+        {
+          "year": "2025",
+          "title": "Nationwide Launch",
+          "description": "Launched the first-ever All-India trials, receiving an overwhelming response from aspiring cricketers."
+        },
+        {
+          "year": "2026",
+          "title": "Inaugural Season",
+          "description": "The first Grand Player Auction and Tournament are set to take place, marking a new era in grassroots cricket."
+        }
+      ]
+    }
+  },
+  "auctionPage": {
+    "title": "The Grand Player Auction",
+    "description": "This is where futures are made. 200 shortlisted players, 8 professional franchises, one life-changing night.",
+    "countdown": {
+      "title": "Auction Starts In",
+      "targetDate": "2026-01-15T00:00:00"
+    },
+    "infoCards": [
+      {
+        "id": 1,
+        "icon": "DollarSign",
+        "title": "Base Price",
+        "description": "Bidding for every player starts at a base price of ₹15,000."
+      },
+      {
+        "id": 2,
+        "icon": "Hammer",
+        "title": "Max Bid",
+        "description": "Franchises can bid up to ₹5 Lakhs to secure the best talent for their team."
+      },
+      {
+        "id": 3,
+        "icon": "Star",
+        "title": "Top 200 Players",
+        "description": "Only the top 200 performers from the High-Performance Camp make it to the auction."
+      }
+    ],
+    "whatYouWin": {
+      "title": "What You Win",
+      "items": [
+        {
+          "id": 1,
+          "icon": "Star",
+          "title": "Professional Contracts",
+          "description": "Secure a professional contract with a franchise and get paid to play."
+        },
+        {
+          "id": 2,
+          "icon": "Tv",
+          "title": "Sponsorships & Exposure",
+          "description": "Gain visibility with media coverage, brand endorsements, and sponsorship deals."
+        }
+      ]
+    }
+  },
+  "careersPage": {
+    "hero": {
+      "title": "Build the Future of Cricket",
+      "subtitle": "We're building India's fastest-growing sports-tech platform, revolutionizing grassroots cricket with AI and digital innovation. Join our 6-month internship program with PPO opportunities."
+    },
+    "whyJoin": {
+      "title": "Why Join The League?",
+      "items": [
+        {
+          "id": 1,
+          "icon": "Star",
+          "title": "Direct Mentorship",
+          "description": "Work directly with founders and industry experts, gaining high-level visibility."
+        },
+        {
+          "id": 2,
+          "icon": "Briefcase",
+          "title": "National-Level Projects",
+          "description": "Contribute to impactful projects that are shaping the future of cricket in India."
+        },
+        {
+          "id": 3,
+          "icon": "Zap",
+          "title": "Advanced Tech Access",
+          "description": "Utilize national coaches, training resources, and our cutting-edge analytics tools."
+        },
+        {
+          "id": 4,
+          "icon": "Target",
+          "title": "High-Growth Path",
+          "description": "Thrive in a dynamic startup environment with a clear path to a full-time offer."
+        }
+      ]
+    },
+    "eligibility": {
+      "title": "General Eligibility Criteria",
+      "items": [
+        {
+          "id": 1,
+          "icon": "GraduationCap",
+          "title": "Academic Excellence",
+          "description": "Minimum 80% in 10th & 12th grades. Minimum 65% in Bachelor's & Master's degree."
+        },
+        {
+          "id": 2,
+          "icon": "Sparkles",
+          "title": "Key Skills & Passion",
+          "description": "Strong communication, problem-solving, and teamwork skills. Passion for sports, tech, or startups is a plus!"
+        }
+      ]
+    },
+    "roles": {
+      "title": "Internship Opportunities",
+      "internshipRoles": [
+        {
+          "id": 1,
+          "title": "Sales Intern",
+          "positions": 2,
+          "salary": "₹30,000/month",
+          "bonus": "Up to ₹30,000",
+          "ctc": "₹10 LPA",
+          "fixed": "₹6.5 LPA",
+          "variable": "₹3.5 LPA",
+          "description": "Drive expansion and scalable projects for league growth. Manage community and college network development. Coordinate launches in new regions.",
+          "skills": ["Networking", "Strategic Thinking", "Teamwork"]
+        },
+        {
+          "id": 2,
+          "title": "Web Developer Intern (Full Stack)",
+          "positions": 1,
+          "salary": "₹10,000/month",
+          "bonus": "Up to ₹5,000",
+          "ctc": "₹6.5 LPA",
+          "fixed": "₹5 LPA",
+          "variable": "₹1.5 LPA",
+          "description": "Design, develop, and maintain the league website and dashboards. Ensure seamless and responsive user experience on all devices. Build and integrate frontend and backend functions, develop and consume APIs.",
+          "skills": ["HTML, CSS, JS", "Node.js, Python, or Java", "SQL or NoSQL", "Git & API integration"]
+        },
+        {
+          "id": 3,
+          "title": "Business Development Intern",
+          "positions": 2,
+          "salary": "₹10,000/month",
+          "bonus": "Up to ₹5,000",
+          "ctc": "₹6.5 LPA",
+          "fixed": "₹5 LPA",
+          "variable": "₹1.5 LPA",
+          "description": "Research and identify partnership and sponsorship opportunities. Support league expansion in new cities and districts. Build collaborations with local communities and college networks.",
+          "skills": ["Communication", "Negotiation", "Community Engagement"]
+        },
+        {
+          "id": 4,
+          "title": "HR Intern",
+          "positions": 2,
+          "salary": "₹10,000/month",
+          "bonus": "Up to ₹5,000",
+          "ctc": "₹6.5 LPA",
+          "fixed": "₹5 LPA",
+          "variable": "₹1.5 LPA",
+          "description": "Manage recruitment pipelines and interviews. Support onboarding and documentation. Develop HR policies and foster team culture.",
+          "skills": ["People Orientation", "Organization", "Documentation"]
+        },
+        {
+          "id": 5,
+          "title": "CEO Office Intern",
+          "positions": 1,
+          "salary": "₹10,000/month",
+          "bonus": "Up to ₹5,000",
+          "ctc": "₹6.5 LPA",
+          "fixed": "₹5 LPA",
+          "variable": "₹1.5 LPA",
+          "description": "Collaborate directly with founders on strategy and high-priority projects. Manage cross-team coordination and support data-driven decision-making.",
+          "skills": ["Analytical Thinking", "Ownership", "Multitasking"]
+        },
+        {
+          "id": 6,
+          "title": "AI / Research Intern",
+          "positions": 2,
+          "salary": "₹10,000/month",
+          "bonus": "Up to ₹5,000",
+          "ctc": "₹6.5 LPA",
+          "fixed": "₹5 LPA",
+          "variable": "₹1.5 LPA",
+          "description": "Work on AI player analytics and prediction models. Research and design advanced AI/ML models including deep learning and computer vision. Develop end-to-end ML and AI pipelines.",
+          "skills": ["Python (TensorFlow, PyTorch)", "Data Handling", "Model Development", "AI/ML Pipelines"]
+        }
+      ]
+    },
+    "apply": {
+      "title": "Apply Now"
+    }
+  },
+  "contactPage": {
+    "title": "Get In Touch",
+    "description": "Have questions or want to partner with us? We'd love to hear from you. Reach out through the form or contact details below.",
+    "form": {
+      "title": "Send us a Message",
+      "fields": {
+        "name": "Your Name *",
+        "email": "Your Email *",
+        "message": "Message *"
+      },
+      "submitButton": "Send Message",
+      "sendingButton": "Sending...",
+      "successTitle": "Message Sent!",
+      "successDescription": "Thanks for reaching out. We'll get back to you soon."
+    },
+    "contactInfo": [
+      {
+        "id": 1,
+        "icon": "Mail",
+        "title": "Email Us",
+        "value": "info@turbocricketleague.com",
+        "href": "mailto:info@turbocricketleague.com"
+      },
+      {
+        "id": 2,
+        "icon": "MapPin",
+        "title": "Our Office",
+        "value": "A-116, Urbtech Trade centre, Sector 132, Noida",
+        "href": "#"
+      }
+    ],
+    "map": {
+      "src": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.137017513926!2d77.394288!3d28.505556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce65b6aaaaaab%3A0x814463c6145b8f6!2sUrbtech%20Trade%20Centre!5e0!3m2!1sen!2sin!4v1678273858345!5m2!1sen!2sin",
+      "title": "Office Location"
+    }
+  },
+  "newsPage": {
+    "title": "News & Media",
+    "description": "The latest updates, announcements, and stories from the heart of the Turbo Cricket League.",
+    "loadMoreButton": "Load More Articles",
+    "articles": [
+      {
+        "id": 1,
+        "title": "TCL Announces Nationwide Trials for 2025-26 Season",
+        "date": "October 01, 2025",
+        "excerpt": "The search for India's next cricket superstar begins! Turbo Cricket League has officially opened registrations for its nationwide trials..."
+      },
+      {
+        "id": 2,
+        "title": "Former International Stars Join TCL as Mentors",
+        "date": "September 25, 2025",
+        "excerpt": "In a major boost for young talent, several former international cricketers have joined the TCL mentorship panel to guide the next generation."
+      },
+      {
+        "id": 3,
+        "title": "Franchise Auction Sets New Records",
+        "date": "September 18, 2025",
+        "excerpt": "The Grand Player Auction was a massive success, with franchises spending big to build their dream teams for the upcoming season."
+      }
+    ]
+  },
+  "playerJourneyPage": {
+    "title": "The Path to Glory",
+    "subtitle": "Your step-by-step guide from registration to lifting the trophy. This is where your professional journey begins.",
+    "steps": [
+      {
+        "id": 1,
+        "icon": "FileText",
+        "title": "Step 1: Registration",
+        "description": "Your journey starts with a simple online registration. Secure your spot for the trials.",
+        "accordion": {
+          "trigger": "Details",
+          "items": [
+            {
+              "icon": "DollarSign",
+              "iconColor": "green-400",
+              "label": "Fee:",
+              "value": "₹300 (Payable at trial ground)"
+            },
+            {
+              "icon": "Users",
+              "iconColor": "blue-400",
+              "label": "Gender:",
+              "value": "Male Only"
+            },
+            {
+              "icon": "GitBranch",
+              "iconColor": "purple-400",
+              "label": "Age Categories:",
+              "value": "U16 | U19 | U21 | U23"
+            }
+          ]
+        }
+      },
+      {
+        "id": 2,
+        "icon": "Map",
+        "title": "Step 2: All India Trials",
+        "description": "Showcase your skills in front of expert selectors at our nationwide trials.",
+        "accordion": {
+          "trigger": "Selection Criteria",
+          "content": [
+            {
+              "label": "Batsman:",
+              "value": "Score 10 runs."
+            },
+            {
+              "label": "Bowler:",
+              "value": "Defend 8 runs."
+            },
+            {
+              "label": "All-Rounder:",
+              "value": "Achieve any two: 10 runs / 1 wicket / Defend 8 runs."
+            },
+            {
+              "highlight": "Top 400 players qualify for the next stage!"
+            }
+          ]
+        }
+      },
+      {
+        "id": 3,
+        "icon": "Dumbbell",
+        "title": "Step 3: High-Performance Camp",
+        "description": "The top 400 players attend a fully-organized, 1-week camp with elite coaching.",
+        "accordion": {
+          "trigger": "Camp Highlights",
+          "items": [
+            "Stay & meals included.",
+            "Professional fitness & skills sessions.",
+            "Mentorship by renowned coaches.",
+            "2 official matches per player to prove your mettle.",
+            "Top 200 performers advance to the auction!"
+          ]
+        }
+      },
+      {
+        "id": 4,
+        "icon": "ClipboardList",
+        "title": "Step 4: The Player Auction",
+        "description": "The top 200 players enter the Grand Player Auction, where 8 franchises will bid for you.",
+        "accordion": {
+          "trigger": "Auction Details",
+          "items": [
+            {
+              "icon": "DollarSign",
+              "iconColor": "yellow-400",
+              "label": "Base Price:",
+              "value": "₹15,000"
+            },
+            {
+              "icon": "Star",
+              "iconColor": "pink-400",
+              "label": "Max Bid:",
+              "value": "Up to ₹5,00,000"
+            },
+            {
+              "icon": "Trophy",
+              "iconColor": "blue-400",
+              "label": "Outcome:",
+              "value": "Professional contracts & media exposure."
+            }
+          ]
+        }
+      },
+      {
+        "id": 5,
+        "icon": "Trophy",
+        "title": "Step 5: The Grand Tournament",
+        "description": "Live your dream. Compete in a national-level tournament with full media coverage.",
+        "accordion": {
+          "trigger": "Tournament Format",
+          "content": "8 Franchises compete in league + knockout stages. The final match will be held in a prestigious International Stadium. We provide your kit, accommodation, and medical support. Your only job is to PLAY & PERFORM."
+        }
+      }
+    ],
+    "cta": {
+      "title": "Ready to Start?",
+      "description": "Your journey from gully to glory is just one click away.",
+      "buttonText": "Register For Trials Now",
+      "link": "/#register"
+    }
+  }
+}

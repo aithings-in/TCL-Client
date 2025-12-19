@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Poppins:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* TCL dark navy background - rgb(16, 23, 43) */
+    --background: 220 46% 8%;
+    --foreground: 0 0% 100%;
+    /* Cards with slightly lighter dark background for contrast */
+    --card: 220 30% 15%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 30% 15%;
+    --popover-foreground: 0 0% 100%;
+    /* TCL theme color - #CE357C (pink/magenta) */
+    --primary: 330 65% 51%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 25% 18%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 20% 20%;
+    --muted-foreground: 0 0% 75%;
+    /* TCL theme color darker shade */
+    --accent: 330 65% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 20% 25%;
+    --input: 220 25% 18%;
+    --ring: 330 65% 51%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  /* Hide default cursor only on non-touch devices */
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+  }
+}
+
+.neon-text-gradient {
+  @apply text-white;
+}
+
+.neon-gradient {
+  @apply bg-white text-[rgb(16,23,43)] hover:bg-gray-100;
+}
+
+/* TCL-style glass effect */
+.glass-effect {
+  @apply bg-[rgba(30,40,60,0.9)] backdrop-blur-lg border border-white/10;
+}
+
+/* TCL-style card hover effect with theme color */
+.ipl-card {
+  @apply bg-[rgba(30,40,60,0.9)] rounded-lg border border-white/10 hover:border-[#CE357C]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#CE357C]/20;
+}
+
+.neon-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+.pulse-glow {
+  animation: pulse-glow-animation 2s infinite;
+}
+
+@keyframes pulse-glow-animation {
+  0%, 100% {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.marquee {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: 2rem;
+}
+
+.marquee-content {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-around;
+  min-width: 100%;
+  gap: 2rem;
+  animation: scroll 30s linear infinite;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - 2rem));
+  }
+}
+
+/* Hide scrollbar for video carousel */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+

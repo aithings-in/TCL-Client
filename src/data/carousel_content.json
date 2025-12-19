@@ -1,0 +1,48 @@
+[
+  {
+    "id": 1,
+    "type": "Article",
+    "title": "Turbo Cricket League Announces 12 New Training Centers",
+    "date": "13 Nov, 2025",
+    "image": "https://horizons-cdn.hostinger.com/6572ccdf-9210-49a9-bd4d-3ced5c3b9150/7ebfd12edbfb9190c64bb8fcc9d3c77b.png",
+    "readMoreUrl": "/news/shardul-thakur-trade",
+    "description": "Mumbai Indians acquire Shardul Thakur in a major trade deal ahead of the new season."
+  },
+  {
+    "id": 2,
+    "type": "Article",
+    "title": "Shardul Thakur traded to Mumbai Indians",
+    "date": "10 Nov, 2025",
+    "image": "https://drive.google.com/file/d/1EjdAz_zI02pijg-sFlEkR8kKQVzR1QXz/view?usp=drive_link",
+    "readMoreUrl": "/news/training-centers-announcement",
+    "description": "TCL expands its AI-powered training infrastructure across India with state-of-the-art facilities."
+  },
+  {
+    "id": 3,
+    "type": "Article",
+    "title": "Record Prize Pool Announced for 2025 Season",
+    "date": "8 Nov, 2025",
+    "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=800&fit=crop",
+    "readMoreUrl": "/news/prize-pool-announcement",
+    "description": "Winning team to receive ₹31 Lakhs, with additional prizes including vehicles and sponsorships."
+  },
+  {
+    "id": 4,
+    "type": "Article",
+    "title": "AI Performance Analysis System Goes Live",
+    "date": "5 Nov, 2025",
+    "image": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1200&h=800&fit=crop",
+    "readMoreUrl": "/news/ai-system-launch",
+    "description": "Revolutionary AI technology now tracking player performance in real-time during matches."
+  },
+  {
+    "id": 5,
+    "type": "Article",
+    "title": "International Stadium Final Confirmed",
+    "date": "3 Nov, 2025",
+    "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=800&fit=crop",
+    "readMoreUrl": "/news/international-stadium-final",
+    "description": "Grand finale to be held at a prestigious international cricket stadium."
+  }
+]
+

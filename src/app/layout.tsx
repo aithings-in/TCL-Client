@@ -33,7 +33,7 @@ export default function RootLayout({
         <div className="bg-background text-white min-h-screen flex flex-col">
           <PreHeader />
           <Header />
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow mt-16">{children}</main>
           <Footer />
           <Toaster />
         </div>

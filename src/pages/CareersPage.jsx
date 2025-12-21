@@ -379,7 +379,7 @@ const CareersPage = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="pt-32 pb-20 bg-white">
+      <div className="pt-16 pb-20 bg-white">
         <Section
           id="hero-careers"
           className="min-h-[50vh] flex items-center justify-center text-center"

@@ -1,12 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { MessageCircle } from "lucide-react";
-import Link from "next/link";
 import { StylishButton } from "@/components/ui/stylish-button";
+import { registrationApi, paymentApi } from "@/lib/api.service";
+import type { RegistrationData } from "@/lib/api.service";
+import type {
+  RazorpayOptions,
+  RazorpayResponse,
+  RazorpayError,
+} from "@/types/razorpay";
+import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
+
+interface IPayment {
+  paymentId: string;
+  orderId: string;
+  amount: number;
+  currency: string;
+  keyId: string;
+  status: "pending" | "completed" | "failed";
+}
 
 const RegistrationForm = () => {
   const { toast } = useToast();
@@ -21,86 +35,393 @@ const RegistrationForm = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Use react-razorpay hook to load Razorpay
+  const {
+    Razorpay,
+    isLoading: isRazorpayLoading,
+    error: razorpayError,
+  } = useRazorpay();
+
+  // Check if Razorpay is actually ready - don't wait for hook's isLoading
+  // Just check if Razorpay is available (either from hook or window)
+  const isRazorpayReady = useMemo(() => {
+    return !!Razorpay || (typeof window !== "undefined" && !!window.Razorpay);
+  }, [Razorpay]);
+
+  // Show error if Razorpay fails to load
+  useEffect(() => {
+    if (razorpayError) {
+      toast({
+        title: "Payment Gateway Error",
+        description: "Failed to load payment gateway. Please refresh the page.",
+        variant: "destructive",
+      });
+    }
+  }, [razorpayError, toast]);
+
+  // Validation functions
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case "name":
+        if (!value || value.trim().length === 0) {
+          return "Name is required";
+        }
+        if (!/^[A-Za-z\s]+$/.test(value.trim())) {
+          return "Name should contain only alphabets";
+        }
+        if (value.trim().length < 2) {
+          return "Name should be at least 2 characters";
+        }
+        return "";
+
+      case "age":
+        if (!value || value.trim().length === 0) {
+          return "Age is required";
+        }
+        const ageNum = parseInt(value, 10);
+        if (isNaN(ageNum)) {
+          return "Age must be a valid number";
+        }
+        if (ageNum < 10) {
+          return "Age must be at least 10";
+        }
+        if (ageNum >= 100) {
+          return "Age must be less than 100";
+        }
+        return "";
+
+      case "mobile":
+        if (!value || value.trim().length === 0) {
+          return "Mobile number is required";
+        }
+        if (!/^[0-9]{10}$/.test(value.replace(/\s+/g, ""))) {
+          return "Mobile number must be exactly 10 digits";
+        }
+        return "";
+
+      case "email":
+        if (!value || value.trim().length === 0) {
+          return "Email is required";
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value.trim())) {
+          return "Please enter a valid email address";
+        }
+        return "";
+
+      case "district":
+        if (!value || value.trim().length === 0) {
+          return "District is required";
+        }
+        if (!/^[A-Za-z\s]+$/.test(value.trim())) {
+          return "District should contain only alphabets";
+        }
+        return "";
+
+      case "state":
+        if (!value || value.trim().length === 0) {
+          return "State is required";
+        }
+        if (!/^[A-Za-z\s]+$/.test(value.trim())) {
+          return "State should contain only alphabets";
+        }
+        return "";
+
+      case "role":
+        if (!value || value.trim().length === 0) {
+          return "Role is required";
+        }
+        return "";
+
+      default:
+        return "";
+    }
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+
+    // For mobile, only allow digits
+    if (name === "mobile") {
+      const digitsOnly = value.replace(/\D/g, "");
+      if (digitsOnly.length <= 10) {
+        setFormData((prev) => ({ ...prev, [name]: digitsOnly }));
+        // Validate after updating
+        const error = validateField(name, digitsOnly);
+        setErrors((prev) => ({ ...prev, [name]: error }));
+      }
+      return;
+    }
+
+    // For name, district, state - only allow alphabets and spaces
+    if (name === "name" || name === "district" || name === "state") {
+      const alphabetsOnly = value.replace(/[^A-Za-z\s]/g, "");
+      setFormData((prev) => ({ ...prev, [name]: alphabetsOnly }));
+      // Validate after updating
+      const error = validateField(name, alphabetsOnly);
+      setErrors((prev) => ({ ...prev, [name]: error }));
+      return;
+    }
+
+    // For age - only allow digits
+    if (name === "age") {
+      const digitsOnly = value.replace(/\D/g, "");
+      setFormData((prev) => ({ ...prev, [name]: digitsOnly }));
+      // Validate after updating
+      const error = validateField(name, digitsOnly);
+      setErrors((prev) => ({ ...prev, [name]: error }));
+      return;
+    }
+
+    // For other fields, allow normal input
     setFormData((prev) => ({ ...prev, [name]: value }));
+    // Validate after updating
+    const error = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    Object.keys(formData).forEach((key) => {
+      const error = validateField(key, formData[key as keyof typeof formData]);
+      if (error) {
+        newErrors[key] = error;
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handlePayment = async (
+    registrationId: string,
+    payment: IPayment | null
+  ) => {
+    try {
+      setIsProcessingPayment(true);
+
+      // Wait for Razorpay to be ready (with timeout)
+      let RazorpayInstance =
+        Razorpay || (typeof window !== "undefined" ? window.Razorpay : null);
+
+      if (!RazorpayInstance) {
+        toast({
+          title: "Payment Gateway Not Ready",
+          description:
+            "Payment gateway is still loading. Please wait a moment and try again, or refresh the page.",
+          variant: "destructive",
+        });
+        setIsProcessingPayment(false);
+        return;
+      }
+
+      let paymentResponse;
+      if (
+        payment?.orderId &&
+        payment?.paymentId &&
+        payment?.status === "pending"
+      ) {
+        paymentResponse = payment;
+      } else {
+        // Initialize payment
+        const initResponse = await paymentApi.initialize(registrationId);
+
+        if (!initResponse.success || !initResponse.data) {
+          toast({
+            title: "Payment Initialization Failed",
+            description: initResponse.message || "Failed to initialize payment",
+            variant: "destructive",
+          });
+          setIsProcessingPayment(false);
+          return;
+        }
+        paymentResponse = initResponse.data;
+      }
+
+      const { paymentId, orderId, amount, currency, keyId } = paymentResponse;
+      setPaymentId(paymentId);
+
+      // Open Razorpay checkout
+      const options: RazorpayOrderOptions = {
+        key: keyId,
+        amount: amount * 100,
+        currency: currency.toUpperCase() as "INR",
+        name: "Turbo Cricket League",
+        description: "Registration Payment",
+        order_id: orderId,
+        handler: async function (response: RazorpayResponse) {
+          try {
+            setIsProcessingPayment(true);
+
+            // Verify payment
+            const verifyResponse = await paymentApi.verify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              paymentId: paymentId,
+            });
+
+            setIsProcessingPayment(false);
+
+            if (verifyResponse.success) {
+              setIsSubmitted(true);
+              toast({
+                title: "Payment Successful!",
+                description: "Your registration and payment are complete!",
+              });
+            } else {
+              toast({
+                title: "Payment Verification Failed",
+                description:
+                  verifyResponse.message || "Payment could not be verified",
+                variant: "destructive",
+              });
+            }
+          } catch (error: any) {
+            setIsProcessingPayment(false);
+            toast({
+              title: "Payment Verification Error",
+              description: error.message || "Failed to verify payment",
+              variant: "destructive",
+            });
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.mobile,
+        },
+        theme: {
+          color: "#EC4899", // brandPink
+        },
+        modal: {
+          ondismiss: function () {
+            setIsProcessingPayment(false);
+            toast({
+              title: "Payment Cancelled",
+              description: "You can complete the payment later.",
+            });
+          },
+        },
+        notes: {
+          registrationId: registrationId,
+          leagueType: "trial",
+        } as any, // Razorpay accepts object but react-razorpay types expect string
+      };
+
+      const razorpay = new RazorpayInstance(options);
+
+      // Handle payment failure
+      razorpay.on("payment.failed", function (response: RazorpayError) {
+        setIsProcessingPayment(false);
+        toast({
+          title: "Payment Failed",
+          description:
+            response.error.description || "Payment could not be processed",
+          variant: "destructive",
+        });
+      });
+
+      // Open Razorpay checkout modal
+      razorpay.open();
+      setIsProcessingPayment(false); // Modal is open, processing happens in handler
+    } catch (error: any) {
+      setIsProcessingPayment(false);
+      toast({
+        title: "Payment Error",
+        description: error.message || "Failed to process payment",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const requiredFields = [
-      "name",
-      "age",
-      "mobile",
-      "email",
-      "district",
-      "state",
-      "role",
-    ];
-    for (const field of requiredFields) {
-      if (!formData[field as keyof typeof formData]) {
-        toast({
-          title: "Incomplete Form",
-          description: "Please fill all required fields before proceeding.",
-          variant: "destructive",
-        });
-        return;
-      }
+
+    // Validate all fields
+    const isValid = validateForm();
+    if (!isValid) {
+      // Get the first error from the updated errors state
+      const validationErrors: Record<string, string> = {};
+      Object.keys(formData).forEach((key) => {
+        const error = validateField(
+          key,
+          formData[key as keyof typeof formData]
+        );
+        if (error) {
+          validationErrors[key] = error;
+        }
+      });
+
+      const firstError =
+        Object.values(validationErrors).find((err) => err) ||
+        "Please fix the errors in the form";
+      toast({
+        title: "Validation Error",
+        description: firstError,
+        variant: "destructive",
+      });
+      return;
     }
 
     setIsLoading(true);
 
-    // Store in localStorage for demo purposes (replace with API call in production)
     try {
-      // Check if email already exists in localStorage
-      const existingRegistrations = JSON.parse(
-        localStorage.getItem("tcl_registrations") || "[]"
-      );
+      // Prepare registration data
+      const registrationData: RegistrationData = {
+        leagueType: "trial", // Default to trial
+        name: formData.name,
+        age: parseInt(formData.age, 10),
+        mobile: formData.mobile,
+        email: formData.email,
+        district: formData.district,
+        state: formData.state,
+        role: formData.role as RegistrationData["role"],
+      };
 
-      const emailExists = existingRegistrations.some(
-        (reg: { email: string }) => reg.email === formData.email
-      );
+      // Create registration via API
+      const response = await registrationApi.create(registrationData);
 
-      if (emailExists) {
+      if (!response.success) {
+        // Show validation error from API (first error if multiple)
+        const errorMessage =
+          response.message || "Could not complete registration";
         toast({
-          title: "Email Already Registered",
-          description:
-            "This email address has already been registered. Please use a different email address.",
+          title: "Registration Failed",
+          description: errorMessage,
           variant: "destructive",
         });
         setIsLoading(false);
         return;
       }
 
-      // Save registration to localStorage
-      const newRegistration = {
-        ...formData,
-        age: parseInt(formData.age, 10),
-        registeredAt: new Date().toISOString(),
-      };
+      // Get registration ID from response
+      const regId = response.data?._id;
+      if (!regId) {
+        toast({
+          title: "Registration Error",
+          description: "Registration created but could not proceed to payment",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
 
-      existingRegistrations.push(newRegistration);
-      localStorage.setItem(
-        "tcl_registrations",
-        JSON.stringify(existingRegistrations)
-      );
-
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setIsSubmitted(true);
-      toast({
-        title: "Registration Successful!",
-        description:
-          "Your registration has been received. We'll contact you soon!",
-      });
-    } catch (error) {
+      // Initialize payment flow
+      await handlePayment(regId, response.data?.payment || null);
+    } catch (error: any) {
       toast({
         title: "Submission Error",
-        description: "Could not save your registration. Please try again.",
+        description:
+          error.message ||
+          "Could not save your registration. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -127,7 +448,16 @@ const RegistrationForm = () => {
               Our team will contact you soon with the trial dates and venue
               details.
             </p>
-            
+            {paymentId && (
+              <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm font-semibold text-green-800 mb-1">
+                  ✓ Payment Completed
+                </p>
+                <p className="text-xs text-green-600">
+                  Payment ID: {paymentId}
+                </p>
+              </div>
+            )}
           </motion.div>
         </div>
       </div>
@@ -164,70 +494,127 @@ const RegistrationForm = () => {
               Player Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Player's Name *"
-                required
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brandPink focus:border-transparent"
-              />
-              <input
-                type="number"
-                name="age"
-                value={formData.age}
-                onChange={handleInputChange}
-                placeholder="Age *"
-                required
-                min="10"
-                max="30"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brandPink focus:border-transparent"
-              />
-              <input
-                type="tel"
-                name="mobile"
-                value={formData.mobile}
-                onChange={handleInputChange}
-                placeholder="Mobile & WhatsApp *"
-                required
-                pattern="[0-9]{10}"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brandPink focus:border-transparent"
-              />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Email ID *"
-                required
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brandPink focus:border-transparent"
-              />
-              <input
-                type="text"
-                name="district"
-                value={formData.district}
-                onChange={handleInputChange}
-                placeholder="District *"
-                required
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brandPink focus:border-transparent"
-              />
-              <input
-                type="text"
-                name="state"
-                value={formData.state}
-                onChange={handleInputChange}
-                placeholder="State *"
-                required
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brandPink focus:border-transparent"
-              />
+              <div>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Player's Name *"
+                  required
+                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                    errors.name
+                      ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-brandPink focus:border-transparent"
+                  }`}
+                />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="text"
+                  name="age"
+                  value={formData.age}
+                  onChange={handleInputChange}
+                  placeholder="Age *"
+                  required
+                  maxLength={2}
+                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                    errors.age
+                      ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-brandPink focus:border-transparent"
+                  }`}
+                />
+                {errors.age && (
+                  <p className="mt-1 text-sm text-red-600">{errors.age}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="tel"
+                  name="mobile"
+                  value={formData.mobile}
+                  onChange={handleInputChange}
+                  placeholder="Mobile & WhatsApp * (10 digits)"
+                  required
+                  maxLength={10}
+                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                    errors.mobile
+                      ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-brandPink focus:border-transparent"
+                  }`}
+                />
+                {errors.mobile && (
+                  <p className="mt-1 text-sm text-red-600">{errors.mobile}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Email ID *"
+                  required
+                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                    errors.email
+                      ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-brandPink focus:border-transparent"
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="text"
+                  name="district"
+                  value={formData.district}
+                  onChange={handleInputChange}
+                  placeholder="District *"
+                  required
+                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                    errors.district
+                      ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-brandPink focus:border-transparent"
+                  }`}
+                />
+                {errors.district && (
+                  <p className="mt-1 text-sm text-red-600">{errors.district}</p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="text"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleInputChange}
+                  placeholder="State *"
+                  required
+                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                    errors.state
+                      ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-brandPink focus:border-transparent"
+                  }`}
+                />
+                {errors.state && (
+                  <p className="mt-1 text-sm text-red-600">{errors.state}</p>
+                )}
+              </div>
               <div className="md:col-span-2">
                 <select
                   name="role"
                   value={formData.role}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-brandPink focus:border-transparent"
+                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 focus:outline-none focus:ring-2 ${
+                    errors.role
+                      ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-brandPink focus:border-transparent"
+                  }`}
                 >
                   <option value="" className="text-gray-500">
                     Select Role *
@@ -237,6 +624,9 @@ const RegistrationForm = () => {
                   <option value="All-rounder">All-rounder</option>
                   <option value="Wicketkeeper">Wicketkeeper</option>
                 </select>
+                {errors.role && (
+                  <p className="mt-1 text-sm text-red-600">{errors.role}</p>
+                )}
               </div>
             </div>
             <StylishButton
@@ -244,10 +634,25 @@ const RegistrationForm = () => {
               variant="secondary"
               size="sm"
               className="text-sm w-full"
-              disabled={isLoading}
+              disabled={isLoading || isProcessingPayment}
             >
-              {isLoading ? "Submitting..." : "Register Now"}
+              {isProcessingPayment
+                ? "Processing Payment..."
+                : isLoading
+                ? "Submitting..."
+                : "Register Now"}
             </StylishButton>
+            {!isRazorpayReady && isRazorpayLoading && !razorpayError && (
+              <p className="text-xs text-gray-500 text-center mt-2">
+                Payment gateway is loading. You can still register and complete
+                payment when ready.
+              </p>
+            )}
+            {razorpayError && (
+              <p className="text-xs text-red-500 text-center mt-2">
+                Failed to load payment gateway. Please refresh the page.
+              </p>
+            )}
           </form>
         </motion.div>
       </div>

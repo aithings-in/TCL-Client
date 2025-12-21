@@ -5,6 +5,7 @@ import { StylishButton } from "@/components/ui/stylish-button";
 import { Mail, MapPin, Send } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import content from "@/data/content.json";
+import { leadApi } from "@/lib/api.service";
 
 // Icon mapping for dynamic icons
 const iconMap = {
@@ -64,19 +65,148 @@ const ContactInfo = ({ icon, title, value, href }) => (
 const ContactPage = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
 
-  const handleFormSubmit = (e) => {
+  // Frontend validation
+  const validateField = (name, value) => {
+    let error = "";
+
+    switch (name) {
+      case "name":
+        if (!value || value.trim().length === 0) {
+          error = "Name is required";
+        }
+        break;
+      case "email":
+        if (!value || value.trim().length === 0) {
+          error = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          error = "Please enter a valid email address";
+        }
+        break;
+      case "message":
+        if (!value || value.trim().length === 0) {
+          error = "Message is required";
+        } else if (value.trim().length < 10) {
+          error = "Message must be at least 10 characters";
+        }
+        break;
+      default:
+        break;
+    }
+
+    return error;
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
+  const validateForm = (formData) => {
+    const name = formData.get("name")?.toString().trim() || "";
+    const email = formData.get("email")?.toString().trim() || "";
+    const message = formData.get("message")?.toString().trim() || "";
+
+    const newErrors = {
+      name: validateField("name", name),
+      email: validateField("email", email),
+      message: validateField("message", message),
+    };
+
+    setErrors(newErrors);
+
+    // Check if form is valid
+    return !newErrors.name && !newErrors.email && !newErrors.message;
+  };
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      toast({
-        title: content.contactPage.form.successTitle,
-        description: content.contactPage.form.successDescription,
+
+    try {
+      const formData = new FormData(e.target);
+      const leadData = {
+        name: formData.get("name")?.toString().trim() || "",
+        email: formData.get("email")?.toString().trim() || "",
+        message: formData.get("message")?.toString().trim() || "",
+      };
+
+      // Frontend validation
+      const isValid = validateForm(formData);
+      if (!isValid) {
+        // Get the first error to show in toast
+        const validationErrors = {
+          name: validateField("name", leadData.name),
+          email: validateField("email", leadData.email),
+          message: validateField("message", leadData.message),
+        };
+        const firstError = Object.values(validationErrors).find((err) => err) || 
+          "Please fix the errors in the form";
+        toast({
+          title: "Validation Error",
+          description: firstError,
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Submit lead via API
+      const response = await leadApi.create({
+        name: leadData.name,
+        email: leadData.email,
+        message: leadData.message,
       });
-      e.target.reset();
+
+      if (response.success) {
+        toast({
+          title: content.contactPage.form.successTitle,
+          description:
+            response.message || content.contactPage.form.successDescription,
+        });
+        e.target.reset();
+        setErrors({ name: "", email: "", message: "" });
+      } else {
+        // Show validation error from API (first error if multiple)
+        const errorMessage = response.message || 
+          "Could not submit your message. Please try again.";
+        
+        toast({
+          title: "Submission Failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
+
+        // If there are field-specific errors, update the error state
+        if (response.errors && Array.isArray(response.errors)) {
+          const newErrors = { name: "", email: "", message: "" };
+          response.errors.forEach((err) => {
+            if (err.toLowerCase().includes("name")) {
+              newErrors.name = err;
+            } else if (err.toLowerCase().includes("email")) {
+              newErrors.email = err;
+            } else if (err.toLowerCase().includes("message")) {
+              newErrors.message = err;
+            }
+          });
+          setErrors(newErrors);
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Submission Error",
+        description: error.message || "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -106,10 +236,18 @@ const ContactPage = () => {
                   <input
                     type="text"
                     name="name"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-white/20 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    onChange={handleInputChange}
+                    className={`w-full px-4 py-3 rounded-lg bg-white border text-black placeholder-gray-400 focus:outline-none focus:ring-2 ${
+                      errors.name
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-white/20 focus:ring-purple-500"
+                    }`}
                     placeholder="Enter your name"
                     required
                   />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-200">{errors.name}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-white font-semibold mb-2">
@@ -118,22 +256,44 @@ const ContactPage = () => {
                   <input
                     type="email"
                     name="email"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-white/20 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    onChange={handleInputChange}
+                    className={`w-full px-4 py-3 rounded-lg bg-white border text-black placeholder-gray-400 focus:outline-none focus:ring-2 ${
+                      errors.email
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-white/20 focus:ring-purple-500"
+                    }`}
                     placeholder="Enter your email"
                     required
                   />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-200">{errors.email}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-white font-semibold mb-2">
                     {content.contactPage.form.fields.message}
+                    <span className="text-sm font-normal text-white/70 ml-2">
+                      (Minimum 10 characters)
+                    </span>
                   </label>
                   <textarea
                     name="message"
                     rows="4"
-                    className="w-full px-4 py-3 rounded-lg bg-white border border-white/20 text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    onChange={handleInputChange}
+                    className={`w-full px-4 py-3 rounded-lg bg-white border text-black placeholder-gray-400 focus:outline-none focus:ring-2 ${
+                      errors.message
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-white/20 focus:ring-purple-500"
+                    }`}
                     placeholder="Your message..."
                     required
+                    minLength={10}
                   ></textarea>
+                  {errors.message && (
+                    <p className="mt-1 text-sm text-red-200">
+                      {errors.message}
+                    </p>
+                  )}
                 </div>
                 <StylishButton
                   type="submit"

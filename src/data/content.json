@@ -364,6 +364,7 @@
       ]
     },
     "legalAdvisor": {
+      "image": "https://tcl-s3-storage.s3.us-east-1.amazonaws.com/Static+Images/LegalAdvisor.jpeg",
       "title": "Legal Advisor",
       "name": "Adv. Vivek Singh",
       "role": "Official Legal Counsel",

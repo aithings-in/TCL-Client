@@ -3,21 +3,21 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      'horizons-cdn.hostinger.com',
-      'images.unsplash.com',
-      'up.yimg.com',
+      "horizons-cdn.hostinger.com",
+      "images.unsplash.com",
+      "up.yimg.com",
     ],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**',
+        protocol: "https",
+        hostname: "**",
       },
     ],
   },
   experimental: {
     serverActions: true,
   },
-}
+  output: "standalone",
+};
 
-module.exports = nextConfig
-
+module.exports = nextConfig;

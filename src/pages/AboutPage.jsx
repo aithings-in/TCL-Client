@@ -203,7 +203,7 @@ const AboutPage = () => {
                       className="w-full max-w-sm"
                     >
                       <img
-                        src={LegalAdvisorImage?.src}
+                        src={content.aboutPage.legalAdvisor.image}
                         alt={
                           content.aboutPage.legalAdvisor.imageAlt ||
                           content.aboutPage.legalAdvisor.name

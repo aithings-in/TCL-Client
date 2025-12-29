@@ -27,7 +27,7 @@
     "alt": "Coaches and officials",
     "height": "medium"
   },
- 
+
   {
     "id": 6,
     "column": 2,
@@ -56,7 +56,7 @@
     "alt": "Cricketer in action",
     "height": "tall"
   },
- 
+
   {
     "id": 11,
     "column": 3,
@@ -150,6 +150,4 @@
     "alt": "Trophy presentation",
     "height": "tall"
   }
-  
 ]
-

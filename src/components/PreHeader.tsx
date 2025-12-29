@@ -1,19 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import {
   Instagram,
   Twitter,
   Youtube,
-  Linkedin,
   MessageCircle,
-  Sun,
-  Moon,
   Facebook,
-  MessageCircleIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { useLeagueType } from "@/hooks/useLeagueType";
 
 interface SocialIconProps {
   href: string;
@@ -21,7 +18,7 @@ interface SocialIconProps {
   label: string;
 }
 
-const SocialIcon = ({ href, icon, label }: SocialIconProps) => (
+export const SocialIcon = ({ href, icon, label }: SocialIconProps) => (
   <motion.a
     href={href}
     target="_blank"
@@ -36,33 +33,34 @@ const SocialIcon = ({ href, icon, label }: SocialIconProps) => (
 );
 
 const PreHeader = () => {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  // const [theme, setTheme] = useState<"light" | "dark">("dark");
 
-  useEffect(() => {
-    // Check for saved theme preference or default to dark
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
-    setTheme(initialTheme);
-    applyTheme(initialTheme);
-  }, []);
+  // useEffect(() => {
+  //   // Check for saved theme preference or default to dark
+  //   const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+  //   const prefersDark = window.matchMedia(
+  //     "(prefers-color-scheme: dark)"
+  //   ).matches;
+  //   const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
+  //   setTheme(initialTheme);
+  //   applyTheme(initialTheme);
+  // }, []);
 
-  const applyTheme = (newTheme: "light" | "dark") => {
-    if (newTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
+  // const applyTheme = (newTheme: "light" | "dark") => {
+  //   if (newTheme === "dark") {
+  //     document.documentElement.classList.add("dark");
+  //   } else {
+  //     document.documentElement.classList.remove("dark");
+  //   }
+  // };
 
-  const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    applyTheme(newTheme);
-  };
+  // const toggleTheme = () => {
+  //   const newTheme = theme === "dark" ? "light" : "dark";
+  //   setTheme(newTheme);
+  //   localStorage.setItem("theme", newTheme);
+  //   applyTheme(newTheme);
+  // };
+  const { leagueType, toggleLeagueType } = useLeagueType();
 
   // Social links - using the same as in Header
   const socialLinks = [
@@ -94,7 +92,7 @@ const PreHeader = () => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 bg-white text-brandBlue py-1.5 sm:py-2 px-2 sm:px-4 border-b border-white/10 z-[60]">
+    <div className="fixed top-0 left-0 right-0 bg-white text-brandBlue py-1 px-2 sm:px-4 border-b border-white/10 z-[60]">
       {/* Desktop/Tablet Layout - Single Row */}
       <div className="hidden md:flex container mx-auto items-center justify-between gap-2">
         {/* Social Icons - Left */}
@@ -105,16 +103,16 @@ const PreHeader = () => {
         </div>
 
         {/* Center Message */}
-        <div className="flex items-center flex-1 min-w-0 justify-center px-2">
+        <div className="flex items-center flex-1 min-w-0 justify-center px-2 py-3">
           <motion.p
             className="text-xs font-semibold text-center uppercase whitespace-nowrap overflow-hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            title="LAST DATE TO REGISTER: 12 DEC | FEES INCREASING SOON - REGISTER NOW"
+            title="LAST DATE TO REGISTER: 15 FEB | FEES INCREASING SOON - REGISTER NOW"
           >
             <span className="font-bold text-brandBlue">
-              LAST DATE TO REGISTER: 12 DEC |
+              LAST DATE TO REGISTER: 15 FEB |
               <span className="text-brandPink font-bold">
                 <Link href="/register" className="mx-1 font-bold">
                   Register Now
@@ -124,71 +122,115 @@ const PreHeader = () => {
           </motion.p>
         </div>
 
-        {/* Theme Toggle - Right */}
-        <div className="flex items-center flex-shrink-0">
-          <motion.button
-            onClick={toggleTheme}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="p-2 rounded-full hover:bg-white/10 transition-colors"
-            aria-label="Toggle theme"
+        {/* League Type Toggle - Right */}
+        <div className="flex items-center flex-shrink-0 gap-2">
+          <span
+            className={`${
+              leagueType === "T20" ? "text-[10px]" : "text-[14px]"
+            } font-semibold text-brandBlue uppercase`}
           >
-            {theme === "dark" ? (
-              <Moon size={18} className="text-brandBlue" />
-            ) : (
-              <Sun size={18} className="text-brandBlue" />
-            )}
-          </motion.button>
+            T10
+          </span>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleLeagueType();
+            }}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
+              leagueType === "T20" ? "bg-brandBlue" : "bg-brandPink"
+            }`}
+            aria-label="Toggle league type"
+            role="switch"
+            aria-checked={leagueType === "T20"}
+            type="button"
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                leagueType === "T20" ? "translate-x-6" : "translate-x-1"
+              }`}
+            />
+          </button>
+          <span
+            className={`${
+              leagueType === "T20" ? "text-[14px]" : "text-[10px]"
+            } font-semibold text-brandBlue uppercase`}
+          >
+            T20
+          </span>
         </div>
       </div>
 
       {/* Mobile Layout - Two Rows */}
       <div className="md:hidden container mx-auto">
-        {/* Top Row: Social Icons and Theme Toggle */}
-        <div className="flex items-center justify-between gap-2 py-1">
-          {/* Social Icons - Left */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {socialLinks.map((social) => (
-              <SocialIcon key={social.label} {...social} />
-            ))}
-          </div>
-
-          {/* Theme Toggle - Right */}
-          <div className="flex items-center flex-shrink-0">
-            <motion.button
-              onClick={toggleTheme}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-1.5 rounded-full hover:bg-white/10 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? (
-                <Moon size={16} className="text-brandBlue" />
-              ) : (
-                <Sun size={16} className="text-brandBlue" />
-              )}
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Bottom Row: Message */}
-        <div className="text-center py-0.5">
-          <motion.p
-            className="text-[8px] font-semibold uppercase whitespace-nowrap overflow-hidden text-ellipsis"
+        <div className="text-center py-2">
+          <motion.div
+            className="text-[8px] font-semibold uppercase whitespace-nowrap overflow-hidden text-ellipsis mb-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            title="LAST DATE TO REGISTER: 12 DEC | FEES INCREASING SOON - REGISTER NOW"
+            title="LAST DATE TO REGISTER: 15 FEB | FEES INCREASING SOON - REGISTER NOW"
           >
-            <span className="font-bold text-brandBlue">
-              LAST DATE TO REGISTER: 12 DEC |
-              <span>
-                <Link href="/register" className="mx-1 text-brandPink">
-                  Register Now
-                </Link>
+            <div className="flex items-center justify-center gap-4">
+              <span className="font-bold text-brandBlue">
+                LAST DATE TO REGISTER: 15 FEB |
               </span>
-            </span>
-          </motion.p>
+              {/* League Type Toggle - Right */}
+              <div className="flex items-center flex-shrink-0 gap-1.5">
+                <span
+                  className={`${
+                    leagueType === "T20" ? "text-[9px]" : "text-[14px]"
+                  } font-semibold text-brandBlue uppercase`}
+                >
+                  T10
+                </span>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleLeagueType();
+                  }}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${
+                    leagueType === "T20" ? "bg-brandBlue" : "bg-brandPink"
+                  }`}
+                  aria-label="Toggle league type"
+                  role="switch"
+                  aria-checked={leagueType === "T20"}
+                  type="button"
+                >
+                  <span
+                    className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${
+                      leagueType === "T20" ? "translate-x-5" : "translate-x-0.5"
+                    }`}
+                  />
+                </button>
+                <span
+                  className={`${
+                    leagueType === "T20" ? "text-[14px]" : "text-[9px]"
+                  } font-semibold text-brandBlue uppercase`}
+                >
+                  T20
+                </span>
+              </div>
+            </div>
+          </motion.div>
+          {/* Highlighted Register Now Button for Mobile/Tablet */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex justify-center"
+          >
+            <Link href="/register">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-brandPink text-white font-bold text-[10px] sm:text-xs px-4 py-1.5 sm:px-6 sm:py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 uppercase tracking-wide border-2 border-brandPink hover:border-pink-400"
+              >
+                Register Now
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
       </div>
     </div>

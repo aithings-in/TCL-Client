@@ -10,6 +10,7 @@ export const API_CONFIG = {
   // API Endpoints
   ENDPOINTS: {
     REGISTRATIONS: "/api/registrations",
+    REGISTRATIONS_AVAILABILITY: "/api/registrations/availability",
     PAYMENTS: {
       INITIALIZE: "/api/payments/initialize",
       VERIFY: "/api/payments/verify",

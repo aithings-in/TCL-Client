@@ -2,8 +2,17 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Menu,
+  MessageCircle,
+  Twitter,
+  X,
+  Youtube,
+} from "lucide-react";
 import { StylishButton } from "@/components/ui/stylish-button";
+import { SocialIcon } from "./PreHeader";
 
 let Link: typeof import("next/link").default;
 let usePathname: typeof import("next/navigation").usePathname;
@@ -30,6 +39,34 @@ const Header = () => {
     { label: "Careers", href: "/careers" },
     { label: "News", href: "/news" },
     { label: "Contact", href: "/contact" },
+  ];
+
+  const socialLinks = [
+    {
+      href: "https://facebook.com",
+      icon: <Facebook color="white" size={14} className="sm:w-4 sm:h-4" />,
+      label: "Facebook",
+    },
+    {
+      href: "https://twitter.com",
+      icon: <Twitter color="white" size={14} className="sm:w-4 sm:h-4" />,
+      label: "Twitter",
+    },
+    {
+      href: "https://instagram.com",
+      icon: <Instagram color="white" size={14} className="sm:w-4 sm:h-4" />,
+      label: "Instagram",
+    },
+    {
+      href: "https://youtube.com",
+      icon: <Youtube color="white" size={14} className="sm:w-4 sm:h-4" />,
+      label: "YouTube",
+    },
+    {
+      href: "https://wa.me",
+      icon: <MessageCircle color="white" size={16} />,
+      label: "WhatsApp",
+    },
   ];
 
   useEffect(() => {
@@ -61,7 +98,7 @@ const Header = () => {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="fixed right-0 left-0 top-[64px] sm:top-[56px] md:top-[48px] w-full z-50 transition-all duration-300 bg-brandBlue/95 shadow-lg backdrop-blur-sm"
+      className="fixed right-0 left-0 top-[90px] sm:top-[90px] md:top-[48px] w-full z-50 transition-all duration-300 bg-brandBlue/95 shadow-lg backdrop-blur-sm"
     >
       <nav className="container mx-auto px-3 sm:px-4 py-2 sm:py-3">
         <div className="flex items-center justify-between">
@@ -192,6 +229,19 @@ const Header = () => {
                         REGISTER
                       </StylishButton>
                     </Link>
+                  </motion.div>
+                  {/* Social Icons - Left */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: navLinks.length * 0.1, duration: 0.3 }}
+                    className="mt-8 w-full max-w-xs mx-auto"
+                  >
+                    <div className="flex items-center justify-center gap-3 flex-shrink-0">
+                      {socialLinks.map((social) => (
+                        <SocialIcon key={social.label} {...social} />
+                      ))}
+                    </div>
                   </motion.div>
                 </div>
               </motion.div>

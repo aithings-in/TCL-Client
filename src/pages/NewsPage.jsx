@@ -1,9 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import content from "@/data/content.json";
-import NewsCard from "@/components/NewsCard";
 import latestNews from "@/data/latestNews.json";
-import { StylishButton } from "@/components/ui/stylish-button";
+import NewsGrid from "@/components/NewsGrid";
 const PageTransition = ({ children }) => (
   <motion.div
     initial={{ opacity: 0 }}
@@ -30,18 +29,6 @@ const SectionTitle = ({ children, description }) => (
 );
 
 const NewsPage = () => {
-  const articles = content.newsPage.articles.map((article) => ({
-    ...article,
-    description: article.excerpt,
-  }));
-
-  const rowConfigs = [
-    [1, 1, 1, 1],
-    [2, 2],
-    [1, 1, 2],
-    [2, 2],
-  ];
-
   const Section = ({ children, id, className = "" }) => (
     <section
       id={id}
@@ -59,54 +46,8 @@ const NewsPage = () => {
             {content.newsPage.title}
           </SectionTitle>
 
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="space-y-6">
-              {(() => {
-                const rowConfigs = [
-                  [1, 1, 1, 1], // 4 cards
-                  [2, 2], // 2 wide cards
-                  [1, 1, 2], // 3 cards
-                  [2, 2], // 2 wide cards
-                ];
-                const maxItems = rowConfigs.flat().length;
-                const items = latestNews.slice(0, maxItems);
-                let newsIndex = 0;
-
-                return rowConfigs.map((rowConfig, rowIndex) => (
-                  <div
-                    key={rowIndex}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-                  >
-                    {rowConfig.map((span, colIndex) => {
-                      const news = items[newsIndex++];
-                      if (!news) return null;
-
-                      const spanClass =
-                        span === 2
-                          ? "lg:col-span-2"
-                          : span === 3
-                          ? "lg:col-span-3"
-                          : "lg:col-span-1";
-
-                      return (
-                        <div
-                          key={news.id ?? `${rowIndex}-${colIndex}`}
-                          className={`${spanClass} h-full`}
-                        >
-                          <NewsCard news={news} index={newsIndex - 1} />
-                        </div>
-                      );
-                    })}
-                  </div>
-                ));
-              })()}
-            </div>
-          </div>
-          <div className="text-center mt-16">
-            <StylishButton size="lg" variant="secondary">
-              Load More News
-            </StylishButton>
-          </div>
+          {/* Use NewsGrid component to display all news items */}
+          <NewsGrid items={latestNews} showAll={true} />
         </div>
       </div>
     </PageTransition>

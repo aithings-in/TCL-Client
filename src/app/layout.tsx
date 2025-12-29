@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import PreHeader from "@/components/PreHeader";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { LeagueTypeProvider } from "@/hooks/useLeagueType";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,13 +31,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="bg-background text-white min-h-screen flex flex-col">
-          <PreHeader />
-          <Header />
-          <main className="flex-grow mt-16">{children}</main>
-          <Footer />
-          <Toaster />
-        </div>
+        <LeagueTypeProvider>
+          <div className="bg-background text-white min-h-screen flex flex-col">
+            <PreHeader />
+            <Header />
+            <main className="flex-grow mt-16">{children}</main>
+            <Footer />
+            <Toaster />
+          </div>
+        </LeagueTypeProvider>
       </body>
     </html>
   );

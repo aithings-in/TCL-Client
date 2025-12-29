@@ -49,7 +49,7 @@
     "date": "October 2, 2025",
     "readMoreLink": "#"
   },
-  
+
   {
     "id": 7,
     "column": 3,
@@ -119,6 +119,15 @@
     "imageAlt": "Cricket action",
     "date": "October 22, 2025",
     "readMoreLink": "#"
+  },
+  {
+    "id": 14,
+    "column": 4,
+    "title": "TCL Nationals 2025: Top Performances and Highlights",
+    "description": "The Turbo Cricket League Nationals 2025 showcased thrilling matches, exceptional performances, and unforgettable moments. From high-scoring contests to nail-biting finishes, this season was packed with excitement.",
+    "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&h=600&fit=crop",
+    "imageAlt": "Cricket action",
+    "date": "November 15, 2025",
+    "readMoreLink": "#"
   }
 ]
-

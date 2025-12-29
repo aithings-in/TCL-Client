@@ -5,13 +5,14 @@ import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
 import { StylishButton } from "@/components/ui/stylish-button";
 import { registrationApi, paymentApi } from "@/lib/api.service";
-import type { RegistrationData } from "@/lib/api.service";
+import type { RegistrationData, AvailabilityData } from "@/lib/api.service";
 import type {
   RazorpayOptions,
   RazorpayResponse,
   RazorpayError,
 } from "@/types/razorpay";
 import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
+import { useLeagueType } from "@/hooks/useLeagueType";
 
 interface IPayment {
   paymentId: string;
@@ -24,6 +25,24 @@ interface IPayment {
 
 const RegistrationForm = () => {
   const { toast } = useToast();
+  const { leagueType: providerLeagueType } = useLeagueType();
+
+  // Map provider league type (T10/T20) to registration league type (t10-2026/t20-2026)
+  const leagueType: "t20-2026" | "t10-2026" | "trial" =
+    providerLeagueType === "T10"
+      ? "t10-2026"
+      : providerLeagueType === "T20"
+      ? "t20-2026"
+      : "trial";
+
+  const [registrationType, setRegistrationType] = useState<
+    "team" | "individual"
+  >("individual");
+  const [teamName, setTeamName] = useState("");
+  const [teamId, setTeamId] = useState<string | null>(null);
+  const [availability, setAvailability] = useState<AvailabilityData | null>(
+    null
+  );
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -62,6 +81,60 @@ const RegistrationForm = () => {
       });
     }
   }, [razorpayError, toast]);
+
+  // Fetch availability when league type or registration type changes
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      if (leagueType === "t10-2026") {
+        try {
+          const response = await registrationApi.getAvailability(
+            leagueType,
+            registrationType
+          );
+          if (response.success && response.data) {
+            setAvailability(response.data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch availability:", error);
+        }
+      } else {
+        // Clear availability for non-T10 leagues
+        setAvailability(null);
+      }
+    };
+
+    fetchAvailability();
+  }, [leagueType, registrationType, providerLeagueType]);
+
+  // Fetch availability for specific role when role changes (for individual T10)
+  useEffect(() => {
+    const fetchRoleAvailability = async () => {
+      if (
+        leagueType === "t10-2026" &&
+        registrationType === "individual" &&
+        formData.role
+      ) {
+        try {
+          const response = await registrationApi.getAvailability(
+            leagueType,
+            "individual",
+            formData.role
+          );
+          if (response.success && response.data) {
+            // Update availability with role-specific data
+            setAvailability((prev) => ({
+              ...prev,
+              roleAvailability: response.data,
+            }));
+          }
+        } catch (error) {
+          console.error("Failed to fetch role availability:", error);
+        }
+      }
+    };
+
+    fetchRoleAvailability();
+  }, [leagueType, registrationType, formData.role]);
 
   // Validation functions
   const validateField = (name: string, value: string): string => {
@@ -312,7 +385,7 @@ const RegistrationForm = () => {
         },
         notes: {
           registrationId: registrationId,
-          leagueType: "trial",
+          leagueType: leagueType,
         } as any, // Razorpay accepts object but react-razorpay types expect string
       };
 
@@ -376,7 +449,14 @@ const RegistrationForm = () => {
     try {
       // Prepare registration data
       const registrationData: RegistrationData = {
-        leagueType: "trial", // Default to trial
+        leagueType: leagueType,
+        registrationType:
+          leagueType === "t10-2026" ? registrationType : undefined,
+        teamName:
+          leagueType === "t10-2026" && registrationType === "team"
+            ? teamName
+            : undefined,
+        teamId: teamId || undefined,
         name: formData.name,
         age: parseInt(formData.age, 10),
         mobile: formData.mobile,
@@ -442,11 +522,16 @@ const RegistrationForm = () => {
               Registration Successful!
             </h3>
             <p className="text-gray-700 mb-2">
-              You're successfully registered for Turbo Cricket League Trials!
+              You're successfully registered for{" "}
+              {leagueType === "t10-2026"
+                ? "T10 League 2026"
+                : leagueType === "t20-2026"
+                ? "T20 League 2026"
+                : "Turbo Cricket League Trials"}
+              !
             </p>
             <p className="text-gray-700 mb-6">
-              Our team will contact you soon with the trial dates and venue
-              details.
+              Our team will contact you soon with the details.
             </p>
             {paymentId && (
               <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -474,7 +559,11 @@ const RegistrationForm = () => {
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-6xl font-black mb-4 text-brandPink">
-            Register for Trials
+            {leagueType === "t10-2026"
+              ? "Register for T10 League 2026"
+              : leagueType === "t20-2026"
+              ? "Register for T20 League 2026"
+              : "Register for Trials"}
           </h1>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto">
             Join Turbo Cricket League and take the first step towards your
@@ -491,8 +580,142 @@ const RegistrationForm = () => {
         >
           <form onSubmit={handleFormSubmit} className="space-y-4">
             <h3 className="text-2xl font-bold text-center mb-4 text-brandBlue">
-              Player Information
+              {leagueType === "t10-2026" && registrationType === "team"
+                ? "Team Registration"
+                : "Player Information"}
             </h3>
+
+            {/* League Type Display (from provider) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                League Type
+              </label>
+              <div className="w-full p-3 rounded-lg bg-gray-100 border border-gray-300 text-gray-700">
+                {providerLeagueType === "T10"
+                  ? "T10 League 2026"
+                  : providerLeagueType === "T20"
+                  ? "T20 League 2026"
+                  : "Trial Registration"}
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                You can change the league type from the header toggle
+              </p>
+            </div>
+
+            {/* Registration Type Selection for T10 */}
+            {leagueType === "t10-2026" && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Registration Type *
+                </label>
+                <div className="grid grid-cols-2 gap-4 text-brandBlue">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRegistrationType("team");
+                      setTeamName("");
+                      setTeamId(null);
+                    }}
+                    className={`p-4 rounded-lg border-2 transition-all ${
+                      registrationType === "team"
+                        ? "border-brandPink bg-pink-50"
+                        : "border-gray-300 bg-gray-50 hover:border-gray-400"
+                    }`}
+                  >
+                    <div className="font-semibold text-lg">Team Entry</div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      ₹21,000 per team
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      13 Players Max
+                    </div>
+                    {availability?.teams && (
+                      <div className="text-xs mt-2 font-medium">
+                        {availability.teams.remaining} teams remaining
+                      </div>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRegistrationType("individual");
+                      setTeamName("");
+                      setTeamId(null);
+                    }}
+                    className={`p-4 rounded-lg border-2 transition-all ${
+                      registrationType === "individual"
+                        ? "border-brandPink bg-pink-50"
+                        : "border-gray-300 bg-gray-50 hover:border-gray-400"
+                    }`}
+                  >
+                    <div className="font-semibold text-lg">
+                      Individual Entry
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      ₹2,000 per player
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Individual Registration
+                    </div>
+                    {availability?.individuals && (
+                      <div className="text-xs mt-2 font-medium">
+                        {availability.individuals.remaining} slots remaining
+                      </div>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Team Name for Team Registration */}
+            {leagueType === "t10-2026" && registrationType === "team" && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Team Name *
+                </label>
+                <input
+                  type="text"
+                  value={teamName}
+                  onChange={(e) => setTeamName(e.target.value)}
+                  placeholder="Enter your team name"
+                  required
+                  className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brandPink focus:border-transparent"
+                />
+              </div>
+            )}
+
+            {/* Availability Display for Individual T10 */}
+            {leagueType === "t10-2026" &&
+              registrationType === "individual" &&
+              availability?.individuals && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-brandBlue">
+                  <div className="text-sm font-semibold text-blue-900 mb-2">
+                    Available Slots by Role:
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      Wicketkeeper:{" "}
+                      {availability.individuals.byRole.Wicketkeeper.remaining} /{" "}
+                      {availability.individuals.byRole.Wicketkeeper.max}
+                    </div>
+                    <div>
+                      Batsman:{" "}
+                      {availability.individuals.byRole.Batsman.remaining} /{" "}
+                      {availability.individuals.byRole.Batsman.max}
+                    </div>
+                    <div>
+                      Bowler: {availability.individuals.byRole.Bowler.remaining}{" "}
+                      / {availability.individuals.byRole.Bowler.max}
+                    </div>
+                    <div>
+                      All-rounder:{" "}
+                      {availability.individuals.byRole["All-rounder"].remaining}{" "}
+                      / {availability.individuals.byRole["All-rounder"].max}
+                    </div>
+                  </div>
+                </div>
+              )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <input
@@ -500,7 +723,11 @@ const RegistrationForm = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  placeholder="Player's Name *"
+                  placeholder={
+                    registrationType === "team"
+                      ? "Captain's Name *"
+                      : "Player's Name *"
+                  }
                   required
                   className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 ${
                     errors.name
@@ -605,6 +832,23 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Role *
+                  {leagueType === "t10-2026" &&
+                    registrationType === "individual" &&
+                    formData.role &&
+                    availability?.individuals?.byRole && (
+                      <span className="ml-2 text-xs text-gray-500">
+                        (
+                        {
+                          availability.individuals.byRole[
+                            formData.role as keyof typeof availability.individuals.byRole
+                          ]?.remaining
+                        }{" "}
+                        slots remaining)
+                      </span>
+                    )}
+                </label>
                 <select
                   name="role"
                   value={formData.role}
@@ -628,6 +872,12 @@ const RegistrationForm = () => {
                   <p className="mt-1 text-sm text-red-600">{errors.role}</p>
                 )}
               </div>
+              {leagueType === "t10-2026" && registrationType === "team" && (
+                <p className="mt-1 text-xs text-gray-500">
+                  Team composition: 1 Keeper, 3-4 Batters, 3 Bowlers, 4-5
+                  All-rounders (13 max)
+                </p>
+              )}
             </div>
             <StylishButton
               type="submit"

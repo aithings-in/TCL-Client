@@ -53,35 +53,11 @@
         },
         {
           "num": 2,
-          "label": "State Camp"
+          "label": "State Level Tournament"
         },
         {
           "num": 3,
-          "label": "Super Camp"
-        },
-        {
-          "num": 4,
-          "label": "Super Advance Camp"
-        },
-        {
-          "num": 5,
-          "label": "National Camp"
-        },
-        {
-          "num": 6,
-          "label": "Auctions"
-        },
-        {
-          "num": 7,
-          "label": "National League"
-        },
-        {
-          "num": 8,
-          "label": "International Tour"
-        },
-        {
-          "num": 9,
-          "label": "25 Lakh Sponsorship"
+          "label": "Final Tournament"
         }
       ]
     },
@@ -130,49 +106,7 @@
     },
     "offlineLeague": {
       "title": "The Ultimate Offline League",
-      "description": "We're recruiting the best talent from across the country for our high-stakes offline cricket league. This is your chance to get scouted, win sponsorships, and compete for incredible prizes. The grand final will be held in a prestigious International stadium!",
-      "prizes": [
-        {
-          "id": 1,
-          "title": "WINNING TEAM",
-          "prize": "₹31 LAKH",
-          "icon": "Award",
-          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
-          "imageAlt": "Bowler celebrating wicket"
-        },
-        {
-          "id": 2,
-          "title": "RUNNER-UP TEAM",
-          "prize": "₹21 LAKH",
-          "icon": "Award",
-          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
-          "imageAlt": "Batsman celebrating milestone"
-        },
-        {
-          "id": 3,
-          "title": "MAN OF THE SERIES",
-          "prize": "MAHINDRA THAR",
-          "icon": "Award",
-          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
-          "imageAlt": "Cricketer with trophy"
-        },
-        {
-          "id": 4,
-          "title": "BEST BATTER",
-          "prize": "ROYAL ENFIELD BULLET",
-          "icon": "Award",
-          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
-          "imageAlt": "Batter playing shot"
-        },
-        {
-          "id": 5,
-          "title": "BEST BOWLER",
-          "prize": "ROYAL ENFIELD BULLET",
-          "icon": "Award",
-          "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
-          "imageAlt": "Bowler in action"
-        }
-      ]
+      "description": "We're recruiting the best talent from across the country for our high-stakes offline cricket league. This is your chance to get scouted, win sponsorships, and compete for incredible prizes. The grand final will be held in a prestigious International stadium!"
     },
     "aiPlatform": {
       "title": "The Future of Cricket Training",
@@ -358,7 +292,7 @@
     "ourStory": {
       "title": "Our Story",
       "description": "Turbo Cricket League was born from a simple yet powerful idea: to create a transparent, merit-based platform for India's hidden cricket talent. We saw countless gifted players in gullies and local grounds who lacked the right opportunities. TCL is our answer—a professional ecosystem to discover, nurture, and launch the next generation of cricket superstars.",
-      "image": "https://images.unsplash.com/flagged/photo-1568407371446-a239664fb4f4",
+      "image": "https://img.freepik.com/premium-vector/cricket-player-sticker-illustration_835895-15178.jpg?w=2000",
       "imageAlt": "Group of diverse young cricketers standing together"
     },
     "visionMission": [
@@ -428,6 +362,15 @@
           "description": "The first Grand Player Auction and Tournament are set to take place, marking a new era in grassroots cricket."
         }
       ]
+    },
+    "legalAdvisor": {
+      "image": "https://tcl-s3-storage.s3.us-east-1.amazonaws.com/Static+Images/LegalAdvisor.jpeg",
+      "title": "Legal Advisor",
+      "name": "Adv. Vivek Singh",
+      "role": "Official Legal Counsel",
+      "imageAlt": "Adv. Vivek Singh - Legal Advisor for Turbo Cricket League",
+      "description": "Adv. Vivek Singh is the official legal counsel for the Turbo Cricket League (TCL), overseeing all legal and regulatory matters related to the league's operations. With expertise in contract drafting, dispute resolution, and compliance, Adv. Vivek Singh plays a key role in ensuring the league functions within a strong and transparent legal framework.",
+      "responsibilities": "His responsibilities include handling player and franchise agreements, sponsorship and media rights contracts, disciplinary matters, intellectual property protection, and litigation support. Known for a meticulous approach and practical legal solutions, Adv. Vivek Singh works closely with league management, teams, and stakeholders to proactively manage legal risks and uphold the integrity of the league."
     }
   },
   "auctionPage": {
@@ -551,7 +494,12 @@
           "fixed": "₹5 LPA",
           "variable": "₹1.5 LPA",
           "description": "Design, develop, and maintain the league website and dashboards. Ensure seamless and responsive user experience on all devices. Build and integrate frontend and backend functions, develop and consume APIs.",
-          "skills": ["HTML, CSS, JS", "Node.js, Python, or Java", "SQL or NoSQL", "Git & API integration"]
+          "skills": [
+            "HTML, CSS, JS",
+            "Node.js, Python, or Java",
+            "SQL or NoSQL",
+            "Git & API integration"
+          ]
         },
         {
           "id": 3,
@@ -599,7 +547,12 @@
           "fixed": "₹5 LPA",
           "variable": "₹1.5 LPA",
           "description": "Work on AI player analytics and prediction models. Research and design advanced AI/ML models including deep learning and computer vision. Develop end-to-end ML and AI pipelines.",
-          "skills": ["Python (TensorFlow, PyTorch)", "Data Handling", "Model Development", "AI/ML Pipelines"]
+          "skills": [
+            "Python (TensorFlow, PyTorch)",
+            "Data Handling",
+            "Model Development",
+            "AI/ML Pipelines"
+          ]
         }
       ]
     },
@@ -788,6 +741,300 @@
       "description": "Your journey from gully to glory is just one click away.",
       "buttonText": "Register For Trials Now",
       "link": "/#register"
+    }
+  },
+  "tournaments": {
+    "t10": {
+      "name": "Turbo T-10 League 2026",
+      "format": "Knockout Tournament",
+      "eventDate": "Jan - Feb 2026",
+      "offlineLeague": {
+        "title": "Turbo T-10 League 2026",
+        "description": "Join India's premier T10 cricket tournament! Fast-paced action, knockout format, and incredible prizes await. Register your team or join as an individual player.",
+        "format": "Knockout Tournament",
+        "eventDate": "Jan - Feb 2026",
+        "entryFees": {
+          "teamEntry": {
+            "amount": "₹21,000",
+            "description": "per team (13 Players Max)"
+          },
+          "individualEntry": {
+            "amount": "₹2,000",
+            "description": "per player"
+          }
+        },
+        "prizes": [
+          {
+            "id": 1,
+            "title": "WINNING TEAM",
+            "prize": "₹2.5 LAKH",
+            "icon": "Award",
+            "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+            "imageAlt": "Winning team celebrating"
+          },
+          {
+            "id": 2,
+            "title": "RUNNER-UP TEAM",
+            "prize": "₹1.5 LAKH",
+            "icon": "Award",
+            "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+            "imageAlt": "Runner-up team"
+          }
+        ]
+      },
+      "playerJourneyPage": {
+        "title": "The Path to T10 Glory",
+        "subtitle": "Your step-by-step guide to competing in the Turbo T-10 League 2026. Fast-paced cricket, knockout format, and life-changing opportunities.",
+        "steps": [
+          {
+            "id": 1,
+            "icon": "FileText",
+            "title": "Step 1: Registration",
+            "description": "Register as a team or individual player for the Turbo T-10 League 2026.",
+            "accordion": {
+              "trigger": "Registration Details",
+              "items": [
+                {
+                  "icon": "DollarSign",
+                  "iconColor": "green-400",
+                  "label": "Team Entry Fee:",
+                  "value": "₹21,000 per team (13 Players Max)"
+                },
+                {
+                  "icon": "DollarSign",
+                  "iconColor": "blue-400",
+                  "label": "Individual Entry Fee:",
+                  "value": "₹2,000 per player"
+                },
+                {
+                  "icon": "Calendar",
+                  "iconColor": "purple-400",
+                  "label": "Event Date:",
+                  "value": "Jan - Feb 2026"
+                },
+                {
+                  "icon": "Trophy",
+                  "iconColor": "yellow-400",
+                  "label": "Tournament Format:",
+                  "value": "Knockout Tournament"
+                }
+              ]
+            }
+          },
+          {
+            "id": 2,
+            "icon": "Zap",
+            "title": "Step 2: Tournament Participation",
+            "description": "Compete in fast-paced T10 matches in a knockout format. Every match counts!",
+            "accordion": {
+              "trigger": "Tournament Format",
+              "content": "Knockout Tournament - Single elimination format where teams compete head-to-head. Win to advance, lose and you're out. The intensity is unmatched, and every ball matters in this fast-paced format."
+            }
+          },
+          {
+            "id": 3,
+            "icon": "Trophy",
+            "title": "Step 3: Win Big",
+            "description": "Compete for the championship and win incredible cash prizes!",
+            "accordion": {
+              "trigger": "Prize Details",
+              "items": [
+                {
+                  "icon": "Award",
+                  "iconColor": "gold-400",
+                  "label": "Winner Team Prize:",
+                  "value": "₹2.5 Lakh"
+                },
+                {
+                  "icon": "Award",
+                  "iconColor": "silver-400",
+                  "label": "Runner-Up Team Prize:",
+                  "value": "₹1.5 Lakh"
+                }
+              ]
+            }
+          }
+        ],
+        "cta": {
+          "title": "Ready to Join T10 League?",
+          "description": "Register now and be part of India's fastest cricket tournament!",
+          "buttonText": "Register For T10 League",
+          "link": "/#register"
+        }
+      }
+    },
+    "t20": {
+      "name": "Turbo Cricket League T20",
+      "format": "League + Knockout",
+      "eventDate": "2026",
+      "offlineLeague": {
+        "title": "The Ultimate Offline League",
+        "description": "We're recruiting the best talent from across the country for our high-stakes offline cricket league. This is your chance to get scouted, win sponsorships, and compete for incredible prizes. The grand final will be held in a prestigious International stadium!",
+        "prizes": [
+          {
+            "id": 1,
+            "title": "WINNING TEAM",
+            "prize": "₹31 LAKH",
+            "icon": "Award",
+            "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+            "imageAlt": "Bowler celebrating wicket"
+          },
+          {
+            "id": 2,
+            "title": "RUNNER-UP TEAM",
+            "prize": "₹21 LAKH",
+            "icon": "Award",
+            "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+            "imageAlt": "Batsman celebrating milestone"
+          },
+          {
+            "id": 3,
+            "title": "MAN OF THE SERIES",
+            "prize": "MAHINDRA THAR",
+            "icon": "Award",
+            "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+            "imageAlt": "Cricketer with trophy"
+          },
+          {
+            "id": 4,
+            "title": "BEST BATTER",
+            "prize": "ROYAL ENFIELD BULLET",
+            "icon": "Award",
+            "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+            "imageAlt": "Batter playing shot"
+          },
+          {
+            "id": 5,
+            "title": "BEST BOWLER",
+            "prize": "ROYAL ENFIELD BULLET",
+            "icon": "Award",
+            "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=360&fit=crop",
+            "imageAlt": "Bowler in action"
+          }
+        ]
+      },
+      "playerJourneyPage": {
+        "title": "The Path to Glory",
+        "subtitle": "Your step-by-step guide from registration to lifting the trophy. This is where your professional journey begins.",
+        "steps": [
+          {
+            "id": 1,
+            "icon": "FileText",
+            "title": "Step 1: Registration",
+            "description": "Your journey starts with a simple online registration. Secure your spot for the trials.",
+            "accordion": {
+              "trigger": "Details",
+              "items": [
+                {
+                  "icon": "DollarSign",
+                  "iconColor": "green-400",
+                  "label": "Fee:",
+                  "value": "₹300 (Payable at trial ground)"
+                },
+                {
+                  "icon": "Users",
+                  "iconColor": "blue-400",
+                  "label": "Gender:",
+                  "value": "Male Only"
+                },
+                {
+                  "icon": "GitBranch",
+                  "iconColor": "purple-400",
+                  "label": "Age Categories:",
+                  "value": "U16 | U19 | U21 | U23"
+                }
+              ]
+            }
+          },
+          {
+            "id": 2,
+            "icon": "Map",
+            "title": "Step 2: All India Trials",
+            "description": "Showcase your skills in front of expert selectors at our nationwide trials.",
+            "accordion": {
+              "trigger": "Selection Criteria",
+              "content": [
+                {
+                  "label": "Batsman:",
+                  "value": "Score 10 runs."
+                },
+                {
+                  "label": "Bowler:",
+                  "value": "Defend 8 runs."
+                },
+                {
+                  "label": "All-Rounder:",
+                  "value": "Achieve any two: 10 runs / 1 wicket / Defend 8 runs."
+                },
+                {
+                  "highlight": "Top 400 players qualify for the next stage!"
+                }
+              ]
+            }
+          },
+          {
+            "id": 3,
+            "icon": "Dumbbell",
+            "title": "Step 3: High-Performance Camp",
+            "description": "The top 400 players attend a fully-organized, 1-week camp with elite coaching.",
+            "accordion": {
+              "trigger": "Camp Highlights",
+              "items": [
+                "Stay & meals included.",
+                "Professional fitness & skills sessions.",
+                "Mentorship by renowned coaches.",
+                "2 official matches per player to prove your mettle.",
+                "Top 200 performers advance to the auction!"
+              ]
+            }
+          },
+          {
+            "id": 4,
+            "icon": "ClipboardList",
+            "title": "Step 4: The Player Auction",
+            "description": "The top 200 players enter the Grand Player Auction, where 8 franchises will bid for you.",
+            "accordion": {
+              "trigger": "Auction Details",
+              "items": [
+                {
+                  "icon": "DollarSign",
+                  "iconColor": "yellow-400",
+                  "label": "Base Price:",
+                  "value": "₹15,000"
+                },
+                {
+                  "icon": "Star",
+                  "iconColor": "pink-400",
+                  "label": "Max Bid:",
+                  "value": "Up to ₹5,00,000"
+                },
+                {
+                  "icon": "Trophy",
+                  "iconColor": "blue-400",
+                  "label": "Outcome:",
+                  "value": "Professional contracts & media exposure."
+                }
+              ]
+            }
+          },
+          {
+            "id": 5,
+            "icon": "Trophy",
+            "title": "Step 5: The Grand Tournament",
+            "description": "Live your dream. Compete in a national-level tournament with full media coverage.",
+            "accordion": {
+              "trigger": "Tournament Format",
+              "content": "8 Franchises compete in league + knockout stages. The final match will be held in a prestigious International Stadium. We provide your kit, accommodation, and medical support. Your only job is to PLAY & PERFORM."
+            }
+          }
+        ],
+        "cta": {
+          "title": "Ready to Start?",
+          "description": "Your journey from gully to glory is just one click away.",
+          "buttonText": "Register For Trials Now",
+          "link": "/#register"
+        }
+      }
     }
   }
 }

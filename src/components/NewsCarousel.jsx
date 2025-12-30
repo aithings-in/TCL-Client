@@ -72,7 +72,7 @@ const NewsCarousel = () => {
 
   return (
     <section
-      className="w-full h-screen relative overflow-hidden"
+      className="w-full h-[calc(100vh-64px)] relative overflow-hidden"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}

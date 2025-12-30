@@ -8,6 +8,9 @@ import { API_CONFIG, getApiUrl } from "./api.config";
 // Types
 export interface RegistrationData {
   leagueType?: "t20-2026" | "t10-2026" | "trial";
+  registrationType?: "team" | "individual";
+  teamName?: string;
+  teamId?: string;
   name: string;
   age: number;
   mobile: string;
@@ -17,6 +20,25 @@ export interface RegistrationData {
   role: "Batsman" | "Bowler" | "All-rounder" | "Wicketkeeper";
   profileImage?: string | null;
   documents?: string[];
+}
+
+export interface AvailabilityData {
+  teams?: {
+    max: number;
+    remaining: number;
+    registered: number;
+  };
+  individuals?: {
+    max: number;
+    remaining: number;
+    registered: number;
+    byRole: {
+      Wicketkeeper: { max: number; remaining: number; registered: number };
+      Batsman: { max: number; remaining: number; registered: number };
+      Bowler: { max: number; remaining: number; registered: number };
+      "All-rounder": { max: number; remaining: number; registered: number };
+    };
+  };
 }
 
 export interface LeadData {
@@ -72,9 +94,10 @@ async function apiRequest<T>(
 
     if (!response.ok) {
       // Extract validation errors if present
-      const validationError = data.errors && Array.isArray(data.errors) && data.errors.length > 0
-        ? data.errors[0] // Show first validation error
-        : data.message || "An error occurred";
+      const validationError =
+        data.errors && Array.isArray(data.errors) && data.errors.length > 0
+          ? data.errors[0] // Show first validation error
+          : data.message || "An error occurred";
 
       return {
         success: false,
@@ -106,6 +129,26 @@ export const registrationApi = {
       method: "POST",
       body: JSON.stringify(data),
     });
+  },
+
+  /**
+   * Get registration availability
+   */
+  getAvailability: async (
+    leagueType: string,
+    registrationType?: string,
+    playerType?: string
+  ): Promise<ApiResponse<AvailabilityData>> => {
+    const params = new URLSearchParams({ leagueType });
+    if (registrationType) params.append("registrationType", registrationType);
+    if (playerType) params.append("playerType", playerType);
+
+    return apiRequest<AvailabilityData>(
+      `${API_CONFIG.ENDPOINTS.REGISTRATIONS}/availability?${params.toString()}`,
+      {
+        method: "GET",
+      }
+    );
   },
 };
 
@@ -159,4 +202,3 @@ export const leadApi = {
     });
   },
 };
-

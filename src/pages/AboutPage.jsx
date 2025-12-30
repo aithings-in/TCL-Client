@@ -7,9 +7,15 @@ import {
   TrendingUp,
   Award,
   UserCheck,
+  Scale,
+  Instagram,
+  Facebook,
+  Twitter,
+  Youtube,
 } from "lucide-react";
 import content from "@/data/content.json";
 import AboutInfoCard from "@/components/AboutInfoCard";
+import LegalAdvisorImage from "@/assets/LegalAdvisor.jpeg";
 
 // Icon mapping for dynamic icons
 const iconMap = {
@@ -19,6 +25,7 @@ const iconMap = {
   Award,
   UserCheck,
   TrendingUp,
+  Scale,
 };
 
 const getIcon = (iconName) => {
@@ -103,9 +110,10 @@ const AboutPage = () => {
                 className="p-6 md:p-8 lg:p-10"
               >
                 <img
-                  className="w-full h-auto object-cover"
+                  className="h-auto object-cover"
                   alt={content.aboutPage.ourStory.imageAlt}
                   src={content.aboutPage.ourStory.image}
+                  width={400}
                   loading="lazy"
                 />
               </motion.div>
@@ -167,6 +175,137 @@ const AboutPage = () => {
                 />
               ))}
             </div>
+          </section>
+
+          {/* Section 5: Legal Advisor / Our Leadership Team */}
+          <section className="mb-24 mt-24">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, type: "spring" }}
+              viewport={{ once: true }}
+              className="max-w-5xl mx-auto px-4"
+            >
+              <div className="mb-8">
+                <h2 className="text-3xl md:text-4xl font-bold text-brandBlue mb-8">
+                  Our Team
+                </h2>
+              </div>
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div className="flex flex-col md:flex-row">
+                  {/* Left: Image Section */}
+                  <div className="md:w-2/5 flex-shrink-0 bg-gray-50 flex justify-center p-6 md:p-8">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.6 }}
+                      viewport={{ once: true }}
+                      className="w-full max-w-sm"
+                    >
+                      <img
+                        src={content.aboutPage.legalAdvisor.image}
+                        alt={
+                          content.aboutPage.legalAdvisor.imageAlt ||
+                          content.aboutPage.legalAdvisor.name
+                        }
+                        className="w-full h-auto object-cover rounded-lg shadow-md"
+                        loading="lazy"
+                      />
+                    </motion.div>
+                  </div>
+
+                  {/* Right: Content Section */}
+                  <div className="md:w-3/5 p-6 md:p-8 lg:p-12 flex flex-col justify-between">
+                    <div>
+                      {/* Name */}
+                      <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                        {content.aboutPage.legalAdvisor.name}
+                      </h3>
+
+                      {/* Role in parentheses */}
+                      <p className="text-lg md:text-xl text-brandBlue mb-6 font-medium">
+                        ({content.aboutPage.legalAdvisor.role})
+                      </p>
+
+                      {/* Biography */}
+                      <div className="space-y-4 mb-6">
+                        <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                          {content.aboutPage.legalAdvisor.description}
+                        </p>
+                        <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+                          {content.aboutPage.legalAdvisor.responsibilities}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Signature and Social Media */}
+                    <div className="mt-8 pt-6 border-t border-gray-200">
+                      {/* Stylized Signature */}
+                      <p
+                        className="text-2xl md:text-3xl font-cursive text-brandBlue mb-6"
+                        style={{ fontFamily: "cursive", fontStyle: "italic" }}
+                      >
+                        {content.aboutPage.legalAdvisor.name.split(
+                          "Adv. "
+                        )[1] || content.aboutPage.legalAdvisor.name}
+                      </p>
+
+                      {/* Social Media Icons */}
+                      <div className="flex gap-4">
+                        <a
+                          href="https://instagram.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 rounded-full bg-gray-200 hover:bg-brandPink flex items-center justify-center transition-colors duration-300 group"
+                          aria-label="Instagram"
+                        >
+                          <Instagram
+                            size={20}
+                            className="text-gray-600 group-hover:text-white transition-colors"
+                          />
+                        </a>
+                        <a
+                          href="https://facebook.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 rounded-full bg-gray-200 hover:bg-blue-600 flex items-center justify-center transition-colors duration-300 group"
+                          aria-label="Facebook"
+                        >
+                          <Facebook
+                            size={20}
+                            className="text-gray-600 group-hover:text-white transition-colors"
+                          />
+                        </a>
+                        <a
+                          href="https://twitter.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 rounded-full bg-gray-200 hover:bg-blue-400 flex items-center justify-center transition-colors duration-300 group"
+                          aria-label="Twitter"
+                        >
+                          <Twitter
+                            size={20}
+                            className="text-gray-600 group-hover:text-white transition-colors"
+                          />
+                        </a>
+                        <a
+                          href="https://youtube.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-10 h-10 rounded-full bg-gray-200 hover:bg-red-600 flex items-center justify-center transition-colors duration-300 group"
+                          aria-label="YouTube"
+                        >
+                          <Youtube
+                            size={20}
+                            className="text-gray-600 group-hover:text-white transition-colors"
+                          />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </section>
         </div>
       </div>

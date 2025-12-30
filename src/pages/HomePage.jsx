@@ -1,9 +1,12 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { StylishButton } from "@/components/ui/stylish-button";
+import { useLeagueType } from "@/hooks/useLeagueType";
 import {
   Zap,
   ShieldCheck,
@@ -37,6 +40,7 @@ import galleryImages from "@/data/gallery.json";
 import MagicMomentCard from "@/components/MagicMomentCard";
 import VideoCard from "@/components/VideoCard";
 import NewsCard from "@/components/NewsCard";
+import NewsGrid from "@/components/NewsGrid";
 import PrizeCard from "@/components/PrizeCard";
 import AIPlatformCard from "@/components/AIPlatformCard";
 import WhyJoinCard from "@/components/WhyJoinCard";
@@ -167,8 +171,14 @@ const Counter = ({ end, suffix, prefix, title }) => (
 const HomePage = () => {
   const router = useRouter();
   const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
+  const { leagueType } = useLeagueType();
 
   const testimonials = content.homePage.testimonials.testimonials;
+
+  // Get tournament-specific content based on league type
+  const tournamentKey = leagueType.toLowerCase();
+  const tournamentContent = content.tournaments[tournamentKey];
+  const offlineLeaguePrizes = tournamentContent?.offlineLeague?.prizes || [];
 
   const handleTestimonialScroll = (direction) => {
     const container = document.getElementById("testimonials-container");
@@ -363,60 +373,125 @@ const HomePage = () => {
               Row 2: steps 4-6 (right to left on desktop)
               Row 3: steps 7-9 (left to right)
             */}
-            {/* Journey steps content (without background connector line) */}
-            <div className="max-w-5xl mx-auto">
-              <div className="space-y-8 md:space-y-12">
-                {[
-                  content.homePage.journeyFlowchart.steps.slice(0, 3),
-                  content.homePage.journeyFlowchart.steps.slice(3, 6),
-                  content.homePage.journeyFlowchart.steps.slice(6, 9),
-                ].map((rowSteps, rowIndex) => (
-                  <div
-                    key={rowIndex}
-                    className={`flex flex-wrap justify-evenly items-center gap-4 md:gap-6 lg:gap-8 ${
-                      rowIndex === 1 ? "md:flex-row-reverse" : ""
-                    }`}
-                  >
-                    {rowSteps.map((step, index) => (
-                      <React.Fragment key={step.num}>
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{
-                            duration: 0.5,
-                            delay: (rowIndex * 3 + index) * 0.1,
-                          }}
-                          viewport={{ once: true }}
-                          className="relative group"
-                        >
-                          {/* Step bubble with counter */}
-                          <div className="relative z-10">
-                            {/* Number circle */}
-                            <div className="absolute -top-4 -left-4 md:-top-6 md:-left-6 w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-brandBlue flex items-center justify-center shadow-lg shadow-brandBlue/40">
-                              <span className="text-xl md:text-2xl lg:text-3xl font-black text-white">
-                                {step.num}
-                              </span>
-                            </div>
+            {/* Journey steps content with connecting lines */}
+            <div className="max-w-5xl mx-auto relative">
+              {(() => {
+                const allSteps = content.homePage.journeyFlowchart.steps;
+                const stepsPerRow = 3;
+                const totalRows = Math.ceil(allSteps.length / stepsPerRow);
+                const rows = [];
 
-                            {/* Main label circle */}
-                            <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full bg-white border-4 border-brandBlue shadow-xl flex items-center justify-center group-hover:border-brandPink group-hover:shadow-2xl group-hover:shadow-brandPink/20 transition-all duration-300">
-                              <span className="text-sm md:text-base lg:text-lg font-bold text-brandPink text-center px-2 leading-snug">
-                                {step.label}
-                              </span>
-                            </div>
-                          </div>
-                        </motion.div>
-                      </React.Fragment>
-                    ))}
+                // Split steps into rows
+                for (let i = 0; i < totalRows; i++) {
+                  rows.push(
+                    allSteps.slice(i * stepsPerRow, (i + 1) * stepsPerRow)
+                  );
+                }
+
+                return (
+                  <div className="space-y-8 sm:space-y-12 relative">
+                    {rows.map((rowSteps, rowIndex) => {
+                      const isReversed = rowIndex % 2 === 1; // Odd rows are reversed
+                      const isLastRow = rowIndex === rows.length - 1;
+
+                      return (
+                        <div
+                          key={rowIndex}
+                          className={`flex flex-wrap justify-evenly items-center relative gap-y-3 ${
+                            isReversed ? "sm:flex-row-reverse" : ""
+                          }`}
+                        >
+                          {rowSteps.map((step, index) => {
+                            const isLastInRow = index === rowSteps.length - 1;
+                            const isFirstInRow = index === 0;
+                            const stepIndex = rowIndex * stepsPerRow + index;
+                            const isLastStep =
+                              stepIndex === allSteps.length - 1;
+
+                            // For reversed rows, first step is visually last
+                            const visualIndex = isReversed
+                              ? rowSteps.length - 1 - index
+                              : index;
+                            const isVisualLast = isReversed
+                              ? isFirstInRow
+                              : isLastInRow;
+                            const isVisualFirst = !isReversed
+                              ? isLastInRow
+                              : isFirstInRow;
+
+                            return (
+                              <React.Fragment key={step.num}>
+                                <motion.div
+                                  initial={{ opacity: 0, scale: 0.8 }}
+                                  whileInView={{ opacity: 1, scale: 1 }}
+                                  transition={{
+                                    duration: 0.5,
+                                    delay: stepIndex * 0.1,
+                                  }}
+                                  viewport={{ once: true }}
+                                  className="relative group z-10"
+                                >
+                                  {/* Step bubble with counter */}
+                                  <div className="relative z-10">
+                                    {/* Number circle */}
+                                    <div className="absolute -top-4 -left-4 md:-top-6 md:-left-6 w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full bg-brandBlue flex items-center justify-center shadow-lg shadow-brandBlue/40">
+                                      <span className="text-xl md:text-2xl lg:text-3xl font-black text-white">
+                                        {step.num}
+                                      </span>
+                                    </div>
+
+                                    {/* Main label circle */}
+                                    <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full bg-white border-4 border-brandBlue shadow-xl flex items-center justify-center group-hover:border-brandPink group-hover:shadow-2xl group-hover:shadow-brandPink/20 transition-all duration-300">
+                                      <span className="text-sm md:text-base lg:text-lg font-bold text-brandPink text-center px-2 leading-snug">
+                                        {step.label}
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  {/* Vertical connecting line from current row to next row */}
+                                  {!isLastRow && isLastInRow && (
+                                    <div className="hidden md:block absolute top-full left-1/2 transform -translate-x-1/2 w-0.5 h-12 md:h-16 bg-brandBlue z-0">
+                                      <div className="absolute inset-0 bg-brandBlue"></div>
+                                    </div>
+                                  )}
+                                </motion.div>
+
+                                {/* Horizontal connecting line between steps in same row */}
+                                {!isLastInRow && (
+                                  <div className="hidden md:flex items-center flex-1 min-w-[60px] max-w-[120px] h-0.5 mx-2">
+                                    <div className="w-full h-0.5 bg-brandBlue rounded-full relative">
+                                      <div className="absolute inset-0 bg-brandBlue/60"></div>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Mobile connecting lines */}
+                                {!isLastInRow && (
+                                  <div
+                                    className={`${
+                                      index % 2 !== 0
+                                        ? "max-[450px]:hidden"
+                                        : ""
+                                    } md:hidden flex items-center mx-2`}
+                                  >
+                                    <div className="w-4 h-0.5 bg-brandBlue/50 relative"></div>
+                                  </div>
+                                )}
+                              </React.Fragment>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
                   </div>
-                ))}
-              </div>
+                );
+              })()}
             </div>
           </div>
         </Section>
 
-        {/* Hero Section */}
-        <section
+        {/* AI Section */}
+        {/* <section
           id="home"
           className="min-h-screen flex items-center justify-center relative overflow-hidden pt-24"
         >
@@ -484,7 +559,7 @@ const HomePage = () => {
           </div>
 
           <div className="container mx-auto px-4 text-center relative z-10">
-            {/* Badge */}
+  
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -496,7 +571,7 @@ const HomePage = () => {
               </span>
             </motion.div>
 
-            {/* Main Title */}
+   
             <motion.h1
               className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-6 leading-tight"
               initial={{ opacity: 0, y: -50 }}
@@ -508,7 +583,7 @@ const HomePage = () => {
               </span>
             </motion.h1>
 
-            {/* Subtitle */}
+
             <motion.p
               className="text-xl md:text-2xl lg:text-3xl text-gray-300 font-medium mb-10 max-w-4xl mx-auto leading-relaxed"
               initial={{ opacity: 0 }}
@@ -518,7 +593,7 @@ const HomePage = () => {
               {content.homePage.hero.subtitle}
             </motion.p>
 
-            {/* Buttons */}
+  
             <motion.div
               className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center"
               initial={{ opacity: 0, y: 50 }}
@@ -546,7 +621,7 @@ const HomePage = () => {
               </Link>
             </motion.div>
 
-            {/* Floating Elements */}
+
             <div className="absolute inset-0 pointer-events-none z-0">
               {[...Array(6)].map((_, i) => (
                 <motion.div
@@ -569,7 +644,7 @@ const HomePage = () => {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         <Section className="bg-white py-12 md:py-16">
           <div className="max-w-7xl mx-auto px-4">
@@ -711,13 +786,15 @@ const HomePage = () => {
               {/* Title */}
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-6">
                 <span className="bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
-                  {content.homePage.offlineLeague.title}
+                  {tournamentContent?.offlineLeague?.title ||
+                    content.homePage.offlineLeague.title}
                 </span>
               </h2>
 
               {/* Description */}
               <p className="text-lg md:text-xl lg:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                {content.homePage.offlineLeague.description}
+                {tournamentContent?.offlineLeague?.description ||
+                  content.homePage.offlineLeague.description}
               </p>
             </motion.div>
 
@@ -725,101 +802,97 @@ const HomePage = () => {
             <div className="space-y-6">
               {/* Top row - 2 large image cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {content.homePage.offlineLeague.prizes
-                  .slice(0, 2)
-                  .map((prize, index) => (
-                    <motion.div
-                      key={prize.id}
-                      initial={{ opacity: 0, y: 40 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: 0.6,
-                        delay: index * 0.1,
-                        type: "spring",
-                      }}
-                      viewport={{ once: true }}
-                      className="relative h-56 md:h-64 overflow-hidden shadow-2xl group"
-                    >
-                      {/* Background image */}
-                      <img
-                        src={prize.image}
-                        alt={prize.imageAlt || prize.title}
-                        className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                      />
-                      {/* Subtle overlay for readability (no gradient) */}
-                      <div className="absolute inset-0 bg-black/40"></div>
+                {offlineLeaguePrizes.slice(0, 2).map((prize, index) => (
+                  <motion.div
+                    key={prize.id}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.6,
+                      delay: index * 0.1,
+                      type: "spring",
+                    }}
+                    viewport={{ once: true }}
+                    className="relative h-56 md:h-64 overflow-hidden shadow-2xl group"
+                  >
+                    {/* Background image */}
+                    <img
+                      src={prize.image}
+                      alt={prize.imageAlt || prize.title}
+                      className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {/* Subtle overlay for readability (no gradient) */}
+                    <div className="absolute inset-0 bg-black/40"></div>
 
-                      {/* Content */}
-                      <div className="relative z-10 h-full flex items-center justify-between px-6 md:px-8">
-                        <div className="max-w-[65%]">
-                          <p className="text-xs md:text-sm font-semibold text-white/70 uppercase tracking-wide">
-                            Top League Highlight
-                          </p>
-                          <h3 className="text-xl md:text-2xl lg:text-3xl font-black text-white mt-2 leading-tight">
-                            {prize.title}
-                          </h3>
-                          <p className="mt-3 text-sm md:text-base text-white/80 font-semibold">
-                            Prize:&nbsp;
-                            <span className="text-brandPink text-lg md:text-xl font-black">
-                              {prize.prize}
-                            </span>
-                          </p>
-                        </div>
+                    {/* Content */}
+                    <div className="relative z-10 h-full flex items-center justify-between px-6 md:px-8">
+                      <div className="max-w-[65%]">
+                        <p className="text-xs md:text-sm font-semibold text-white/70 uppercase tracking-wide">
+                          Top League Highlight
+                        </p>
+                        <h3 className="text-xl md:text-2xl lg:text-3xl font-black text-white mt-2 leading-tight">
+                          {prize.title}
+                        </h3>
+                        <p className="mt-3 text-sm md:text-base text-white/80 font-semibold">
+                          Prize:&nbsp;
+                          <span className="text-brandPink text-lg md:text-xl font-black">
+                            {prize.prize}
+                          </span>
+                        </p>
                       </div>
-                    </motion.div>
-                  ))}
+                    </div>
+                  </motion.div>
+                ))}
               </div>
 
               {/* Bottom row - 3 cards: small, big, small on large screens */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {content.homePage.offlineLeague.prizes
-                  .slice(2)
-                  .map((prize, index) => (
-                    <motion.div
-                      key={prize.id}
-                      initial={{ opacity: 0, y: 40 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: 0.6,
-                        delay: index * 0.1,
-                        type: "spring",
-                      }}
-                      viewport={{ once: true }}
-                      className={`relative h-52 md:h-56 overflow-hidden shadow-2xl group ${
-                        index === 1 ? "lg:col-span-2" : "lg:col-span-1"
-                      }`}
-                    >
-                      {/* Background image */}
-                      <img
-                        src={prize.image}
-                        alt={prize.imageAlt || prize.title}
-                        className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                      />
-                      {/* Subtle overlay for readability (no gradient) */}
-                      <div className="absolute inset-0 bg-black/40"></div>
+                {offlineLeaguePrizes.slice(2).map((prize, index) => (
+                  <motion.div
+                    key={prize.id}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.6,
+                      delay: index * 0.1,
+                      type: "spring",
+                    }}
+                    viewport={{ once: true }}
+                    className={`relative h-52 md:h-56 overflow-hidden shadow-2xl group ${
+                      index === 1 ? "lg:col-span-2" : "lg:col-span-1"
+                    }`}
+                  >
+                    {/* Background image */}
+                    <img
+                      src={prize.image}
+                      alt={prize.imageAlt || prize.title}
+                      className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {/* Subtle overlay for readability (no gradient) */}
+                    <div className="absolute inset-0 bg-black/40"></div>
 
-                      {/* Content */}
-                      <div className="relative z-10 h-full flex flex-col justify-between p-5">
-                        <div>
-                          <p className="text-[10px] md:text-xs font-semibold text-white/70 uppercase tracking-wide">
-                            League Award
-                          </p>
-                          <h3 className="text-lg md:text-xl font-black text-white mt-1 leading-tight">
-                            {prize.title}
-                          </h3>
-                        </div>
-                        <div className="flex items-end justify-between">
-                          <p className="text-sm md:text-base font-semibold text-white/80">
-                            Prize
-                            <br />
-                            <span className="text-brandPink text-lg md:text-xl font-black">
-                              {prize.prize}
-                            </span>
-                          </p>
-                        </div>
+                    {/* Content */}
+                    <div className="relative z-10 h-full flex flex-col justify-between p-5">
+                      <div>
+                        <p className="text-[10px] md:text-xs font-semibold text-white/70 uppercase tracking-wide">
+                          League Award
+                        </p>
+                        <h3 className="text-lg md:text-xl font-black text-white mt-1 leading-tight">
+                          {prize.title}
+                        </h3>
                       </div>
-                    </motion.div>
-                  ))}
+                      <div className="flex items-end justify-between">
+                        <p className="text-sm md:text-base font-semibold text-white/80">
+                          Prize
+                          <br />
+                          <span className="text-brandPink text-lg md:text-xl font-black">
+                            {prize.prize}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </div>
@@ -840,54 +913,25 @@ const HomePage = () => {
               </h2>
             </motion.div>
 
-            {/*
-              Layout:
-              - Row 1: 4 columns  (1,1,1,1)
-              - Row 2: 2 columns  (2,2)
-              - Row 3: 3 columns  (1,1,2)
-              - Row 4: 2 columns  (2,2)
-              Total slots = 11 news cards (if available)
-            */}
-            <div className="space-y-6">
-              {(() => {
-                const rowConfigs = [
-                  [1, 1, 1, 1], // 4 cards
-                  [2, 2], // 2 wide cards
-                  [1, 1, 2], // 3 cards
-                  [2, 2], // 2 wide cards
-                ];
-                const maxItems = rowConfigs.flat().length; // 11
-                const items = latestNews.slice(0, maxItems);
-                let newsIndex = 0;
-
-                return rowConfigs.map((rowConfig, rowIndex) => (
-                  <div
-                    key={rowIndex}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-                  >
-                    {rowConfig.map((span, colIndex) => {
-                      const news = items[newsIndex++];
-                      if (!news) return null;
-
-                      const spanClass =
-                        span === 2
-                          ? "lg:col-span-2"
-                          : span === 3
-                          ? "lg:col-span-3"
-                          : "lg:col-span-1";
-
-                      return (
-                        <div
-                          key={news.id ?? `${rowIndex}-${colIndex}`}
-                          className={`${spanClass} h-full`}
-                        >
-                          <NewsCard news={news} index={newsIndex - 1} />
-                        </div>
-                      );
-                    })}
-                  </div>
-                ));
-              })()}
+            {/* News Grid with repeating pattern: [1,1,1,1], [2,2], [1,1,1,1], [2,2]... */}
+            {/* On mobile, show limited items; on desktop show all */}
+            <div className="block md:hidden">
+              <NewsGrid items={latestNews} showAll={false} />
+            </div>
+            <div className="hidden md:block">
+              <NewsGrid items={latestNews?.slice(0, 9)} showAll={true} />
+            </div>
+            <div className="text-center mt-8 md:mt-16">
+              <StylishButton
+                onClick={() => {
+                  router.push("/news");
+                }}
+                size="lg"
+                variant="secondary"
+                className="text-sm md:text-base px-6 md:px-8 py-2 md:py-3"
+              >
+                View All News
+              </StylishButton>
             </div>
           </div>
         </Section>
@@ -1028,8 +1072,33 @@ const HomePage = () => {
               </h2>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-2">
-              {/* Render columns dynamically */}
+            {/* Mobile: Show only first 6 images in a simple grid */}
+            <div className="md:hidden grid grid-cols-2 gap-2">
+              {galleryImages.slice(0, 6).map((image, index) => (
+                <motion.div
+                  key={image.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="bg-white overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border border-gray-100 flex flex-col h-fit"
+                >
+                  <div className="relative w-full overflow-hidden">
+                    <img
+                      src={image.image}
+                      alt={image.alt}
+                      className="w-full h-auto object-cover hover:scale-110 transition-transform duration-500"
+                      style={{
+                        height: "150px", // Smaller height on mobile
+                      }}
+                    />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Desktop: Show all images in column layout */}
+            <div className="hidden md:grid grid-cols-2 lg:grid-cols-6 gap-2">
               {[1, 2, 3, 4, 5, 6].map((columnNum) => {
                 const columnImages = galleryImages.filter(
                   (image) => image.column === columnNum
@@ -1043,7 +1112,7 @@ const HomePage = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                         viewport={{ once: true }}
-                        className="bg-white  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border border-gray-100 flex flex-col h-fit"
+                        className="bg-white overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border border-gray-100 flex flex-col h-fit"
                       >
                         <div className="relative w-full overflow-hidden">
                           <img
@@ -1065,6 +1134,20 @@ const HomePage = () => {
                   </div>
                 );
               })}
+            </div>
+
+            {/* View More Gallery Button */}
+            <div className="text-center mt-8 md:mt-12">
+              <StylishButton
+                onClick={() => {
+                  router.push("/gallery");
+                }}
+                size="lg"
+                variant="secondary"
+                className="text-sm md:text-base px-6 md:px-8 py-2 md:py-3"
+              >
+                View Full Gallery
+              </StylishButton>
             </div>
           </div>
         </Section>

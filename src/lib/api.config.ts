@@ -17,6 +17,8 @@ export const API_CONFIG = {
       STATUS: (paymentId: string) => `/api/payments/${paymentId}`,
     },
     LEADS: "/api/leads",
+    STATES: "/api/states",
+    DISTRICTS: "/api/districts",
   },
 };
 

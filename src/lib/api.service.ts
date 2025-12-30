@@ -202,3 +202,97 @@ export const leadApi = {
     });
   },
 };
+
+/**
+ * State API Service
+ */
+export interface State {
+  _id: string;
+  name: string;
+  code: string;
+  type: "state" | "union_territory";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const stateApi = {
+  /**
+   * Get all states
+   */
+  getAll: async (
+    type?: "state" | "union_territory"
+  ): Promise<ApiResponse<State[]>> => {
+    const params = type ? `?type=${type}` : "";
+    return apiRequest<State[]>(`${API_CONFIG.ENDPOINTS.STATES}${params}`, {
+      method: "GET",
+    });
+  },
+
+  /**
+   * Get state by code
+   */
+  getByCode: async (code: string): Promise<ApiResponse<State>> => {
+    return apiRequest<State>(`${API_CONFIG.ENDPOINTS.STATES}/${code}`, {
+      method: "GET",
+    });
+  },
+};
+
+/**
+ * District API Service
+ */
+export interface District {
+  _id: string;
+  name: string;
+  code?: string;
+  stateId: State | string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const districtApi = {
+  /**
+   * Get all districts
+   */
+  getAll: async (
+    stateId?: string,
+    stateCode?: string
+  ): Promise<ApiResponse<District[]>> => {
+    const params = new URLSearchParams();
+    if (stateId) params.append("stateId", stateId);
+    if (stateCode) params.append("stateCode", stateCode);
+    const queryString = params.toString() ? `?${params.toString()}` : "";
+    return apiRequest<District[]>(
+      `${API_CONFIG.ENDPOINTS.DISTRICTS}${queryString}`,
+      {
+        method: "GET",
+      }
+    );
+  },
+
+  /**
+   * Get districts by state code
+   */
+  getByStateCode: async (
+    stateCode: string
+  ): Promise<ApiResponse<District[]>> => {
+    return apiRequest<District[]>(
+      `${API_CONFIG.ENDPOINTS.DISTRICTS}/state-code/${stateCode}`,
+      {
+        method: "GET",
+      }
+    );
+  },
+
+  /**
+   * Get districts by state ID
+   */
+  getByStateId: async (stateId: string): Promise<ApiResponse<District[]>> => {
+    return apiRequest<District[]>(
+      `${API_CONFIG.ENDPOINTS.DISTRICTS}/state/${stateId}`,
+      {
+        method: "GET",
+      }
+    );
+  },
+};

@@ -4,8 +4,18 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
 import { StylishButton } from "@/components/ui/stylish-button";
-import { registrationApi, paymentApi } from "@/lib/api.service";
-import type { RegistrationData, AvailabilityData } from "@/lib/api.service";
+import {
+  registrationApi,
+  paymentApi,
+  stateApi,
+  districtApi,
+} from "@/lib/api.service";
+import type {
+  RegistrationData,
+  AvailabilityData,
+  State,
+  District,
+} from "@/lib/api.service";
 import type {
   RazorpayOptions,
   RazorpayResponse,
@@ -52,6 +62,10 @@ const RegistrationForm = () => {
     state: "",
     role: "",
   });
+  const [states, setStates] = useState<State[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [isLoadingStates, setIsLoadingStates] = useState(false);
+  const [isLoadingDistricts, setIsLoadingDistricts] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [paymentId, setPaymentId] = useState<string | null>(null);
@@ -136,6 +150,83 @@ const RegistrationForm = () => {
     fetchRoleAvailability();
   }, [leagueType, registrationType, formData.role]);
 
+  // Fetch states on component mount
+  useEffect(() => {
+    const fetchStates = async () => {
+      setIsLoadingStates(true);
+      try {
+        const response = await stateApi.getAll();
+        if (response.success && response.data) {
+          setStates(response.data);
+        } else {
+          toast({
+            title: "Error",
+            description: "Failed to load states. Please refresh the page.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch states:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load states. Please refresh the page.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingStates(false);
+      }
+    };
+
+    fetchStates();
+  }, []);
+
+  // Fetch districts when state is selected
+  useEffect(() => {
+    const fetchDistricts = async () => {
+      if (!formData.state) {
+        setDistricts([]);
+        return;
+      }
+
+      setIsLoadingDistricts(true);
+      try {
+        // Find the selected state to get its code
+        const selectedState = states.find((s) => s.name === formData.state);
+        if (!selectedState) {
+          setDistricts([]);
+          setIsLoadingDistricts(false);
+          return;
+        }
+
+        const response = await districtApi.getByStateCode(selectedState.code);
+        if (response.success && response.data) {
+          setDistricts(response.data);
+          // Clear district selection when state changes
+          setFormData((prev) => ({ ...prev, district: "" }));
+        } else {
+          toast({
+            title: "Error",
+            description: "Failed to load districts for selected state.",
+            variant: "destructive",
+          });
+          setDistricts([]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch districts:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load districts. Please try again.",
+          variant: "destructive",
+        });
+        setDistricts([]);
+      } finally {
+        setIsLoadingDistricts(false);
+      }
+    };
+
+    fetchDistricts();
+  }, [formData.state, states]);
+
   // Validation functions
   const validateField = (name: string, value: string): string => {
     switch (name) {
@@ -159,11 +250,8 @@ const RegistrationForm = () => {
         if (isNaN(ageNum)) {
           return "Age must be a valid number";
         }
-        if (ageNum < 10) {
-          return "Age must be at least 10";
-        }
-        if (ageNum >= 100) {
-          return "Age must be less than 100";
+        if (ageNum < 12 || ageNum > 60) {
+          return "Age must be between 12 and 60";
         }
         return "";
 
@@ -190,17 +278,11 @@ const RegistrationForm = () => {
         if (!value || value.trim().length === 0) {
           return "District is required";
         }
-        if (!/^[A-Za-z\s]+$/.test(value.trim())) {
-          return "District should contain only alphabets";
-        }
         return "";
 
       case "state":
         if (!value || value.trim().length === 0) {
           return "State is required";
-        }
-        if (!/^[A-Za-z\s]+$/.test(value.trim())) {
-          return "State should contain only alphabets";
         }
         return "";
 
@@ -232,8 +314,8 @@ const RegistrationForm = () => {
       return;
     }
 
-    // For name, district, state - only allow alphabets and spaces
-    if (name === "name" || name === "district" || name === "state") {
+    // For name - only allow alphabets and spaces
+    if (name === "name") {
       const alphabetsOnly = value.replace(/[^A-Za-z\s]/g, "");
       setFormData((prev) => ({ ...prev, [name]: alphabetsOnly }));
       // Validate after updating
@@ -242,12 +324,20 @@ const RegistrationForm = () => {
       return;
     }
 
-    // For age - only allow digits
-    if (name === "age") {
-      const digitsOnly = value.replace(/\D/g, "");
-      setFormData((prev) => ({ ...prev, [name]: digitsOnly }));
+    // For state and district (dropdowns), just update the value
+    if (name === "state" || name === "district") {
+      setFormData((prev) => ({ ...prev, [name]: value }));
       // Validate after updating
-      const error = validateField(name, digitsOnly);
+      const error = validateField(name, value);
+      setErrors((prev) => ({ ...prev, [name]: error }));
+      return;
+    }
+
+    // For age (dropdown), just update the value
+    if (name === "age") {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      // Validate after updating
+      const error = validateField(name, value);
       setErrors((prev) => ({ ...prev, [name]: error }));
       return;
     }
@@ -725,7 +815,7 @@ const RegistrationForm = () => {
                   onChange={handleInputChange}
                   placeholder={
                     registrationType === "team"
-                      ? "Captain's Name *"
+                      ? "POC Name *"
                       : "Player's Name *"
                   }
                   required
@@ -740,20 +830,26 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div>
-                <input
-                  type="text"
+                <select
                   name="age"
                   value={formData.age}
                   onChange={handleInputChange}
-                  placeholder="Age *"
                   required
-                  maxLength={2}
-                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 focus:outline-none focus:ring-2 ${
                     errors.age
                       ? "border-red-500 focus:ring-red-500 focus:border-red-500"
                       : "border-gray-300 focus:ring-brandPink focus:border-transparent"
                   }`}
-                />
+                >
+                  <option value="" className="text-gray-500">
+                    Select Age *
+                  </option>
+                  {Array.from({ length: 49 }, (_, i) => i + 12).map((age) => (
+                    <option key={age} value={age.toString()}>
+                      {age} years
+                    </option>
+                  ))}
+                </select>
                 {errors.age && (
                   <p className="mt-1 text-sm text-red-600">{errors.age}</p>
                 )}
@@ -796,39 +892,59 @@ const RegistrationForm = () => {
                 )}
               </div>
               <div>
-                <input
-                  type="text"
-                  name="district"
-                  value={formData.district}
-                  onChange={handleInputChange}
-                  placeholder="District *"
-                  required
-                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 ${
-                    errors.district
-                      ? "border-red-500 focus:ring-red-500 focus:border-red-500"
-                      : "border-gray-300 focus:ring-brandPink focus:border-transparent"
-                  }`}
-                />
-                {errors.district && (
-                  <p className="mt-1 text-sm text-red-600">{errors.district}</p>
-                )}
-              </div>
-              <div>
-                <input
-                  type="text"
+                <select
                   name="state"
                   value={formData.state}
                   onChange={handleInputChange}
-                  placeholder="State *"
                   required
-                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 ${
+                  disabled={isLoadingStates}
+                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 focus:outline-none focus:ring-2 ${
                     errors.state
                       ? "border-red-500 focus:ring-red-500 focus:border-red-500"
                       : "border-gray-300 focus:ring-brandPink focus:border-transparent"
-                  }`}
-                />
+                  } ${isLoadingStates ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  <option value="" className="text-gray-500">
+                    {isLoadingStates ? "Loading states..." : "Select State *"}
+                  </option>
+                  {states.map((state) => (
+                    <option key={state._id} value={state.name}>
+                      {state.name}
+                    </option>
+                  ))}
+                </select>
                 {errors.state && (
                   <p className="mt-1 text-sm text-red-600">{errors.state}</p>
+                )}
+              </div>
+              <div>
+                <select
+                  name="district"
+                  value={formData.district}
+                  onChange={handleInputChange}
+                  required
+                  disabled={!formData.state || isLoadingDistricts}
+                  className={`w-full p-3 rounded-lg bg-gray-50 border text-gray-900 focus:outline-none focus:ring-2 ${
+                    errors.district
+                      ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-brandPink focus:border-transparent"
+                  } ${
+                    !formData.state || isLoadingDistricts
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                >
+                  <option value="" className="text-gray-500">
+                    Select District *
+                  </option>
+                  {districts.map((district) => (
+                    <option key={district._id} value={district.name}>
+                      {district.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.district && (
+                  <p className="mt-1 text-sm text-red-600">{errors.district}</p>
                 )}
               </div>
               <div className="md:col-span-2">
@@ -863,6 +979,7 @@ const RegistrationForm = () => {
                   <option value="" className="text-gray-500">
                     Select Role *
                   </option>
+                  <option value="Coach">Coach</option>
                   <option value="Batsman">Batsman</option>
                   <option value="Bowler">Bowler</option>
                   <option value="All-rounder">All-rounder</option>
